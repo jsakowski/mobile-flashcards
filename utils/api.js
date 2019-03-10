@@ -31,13 +31,18 @@ const dummyData = {
 
 export function getDecks() {
   return AsyncStorage.getItem(DECK_STORAGE_KEY).then((results) => {
-    return results === null
-      ? formatDeckResults(setDummyData())
-      : formatDeckResults(JSON.parse(results))
+    return results === null ? setDummyData() : JSON.parse(results)
   })
 }
 
-export function getDeck(id) {}
+export function getDeck(id) {
+  return AsyncStorage.getItem(DECK_STORAGE_KEY).then((results) => {
+    if (results === null) return null
+
+    const decs = JSON.parse(results)
+    return decs[id]
+  })
+}
 
 export function saveDeckTitle(title) {
   return AsyncStorage.mergeItem(

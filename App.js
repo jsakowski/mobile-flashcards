@@ -9,11 +9,12 @@ import {
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
+import decks from './reducers'
 import Decks from './components/Decks'
 import AddDeck from './components/AddDeck'
+import DeckDetail from './components/DeckDetail'
 import FlashcardsStatusBar from './components/FlashcardsStatusBar'
 import { darkGrey, white } from './utils/colors'
-import reducer from './reducers'
 
 const RouteConfigs = {
   Decks: {
@@ -65,17 +66,37 @@ const Tabs = createAppContainer(
     : createMaterialTopTabNavigator(RouteConfigs, TabNavigatorConfig)
 )
 
+const MainNavigator = createAppContainer(
+  createStackNavigator({
+    home: {
+      screen: Tabs,
+      navigationOptions: {
+        header: null
+      }
+    },
+    DeckDetail: {
+      screen: DeckDetail,
+      navigationOptions: ({ navigation }) => ({
+        headerTintColor: white,
+        headerStyle: {
+          backgroundColor: darkGrey
+        }
+      })
+    }
+  })
+)
+
 export default class App extends React.Component {
   render() {
     return (
-      <Provider store={createStore(reducer)}>
+      <Provider store={createStore(decks)}>
         <View style={styles.container}>
           <FlashcardsStatusBar
             backgroundColor={darkGrey}
             barStyle='light-content'
           />
           <SafeAreaView style={styles.container}>
-            <Tabs />
+            <MainNavigator />
           </SafeAreaView>
         </View>
       </Provider>

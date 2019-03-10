@@ -7,9 +7,9 @@ import {
   Platform,
   TextInput
 } from 'react-native'
-import { Header } from 'react-navigation'
-import { connect } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
+import { connect } from 'react-redux'
+import { addDeck } from '../actions'
 import SubmitBtn from './SubmitBtn'
 import { white, lightGrey, grey } from '../utils/colors'
 import { saveDeckTitle } from '../utils/api'
@@ -49,6 +49,16 @@ class AddDeck extends Component {
     this.setState({
       title: ''
     })
+
+    this.props.dispatch(
+      addDeck({
+        [title]: {
+          title: title,
+          questions: []
+        }
+      })
+    )
+
     saveDeckTitle(title)
 
     // navigation to the new deck
@@ -58,11 +68,7 @@ class AddDeck extends Component {
     const { title } = this.state
 
     return (
-      <KeyboardAvoidingView
-        keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : Header.HEIGHT + 35} // adjust the value here if more padding is needed for android
-        style={styles.container}
-        behavior='padding'
-      >
+      <KeyboardAvoidingView style={styles.container} behavior='padding'>
         <ScrollView>
           <Text style={styles.titleText}>
             What is the title on your new deck?

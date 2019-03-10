@@ -4,14 +4,15 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  Platform,
   TouchableOpacity
 } from 'react-native'
 import { AppLoading } from 'expo'
 import { connect } from 'react-redux'
 import { getDecks } from '../utils/api'
-import { lightGrey, darkGrey } from '../utils/colors'
+import { darkGrey } from '../utils/colors'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import Deck from './Deck'
+import { receiveDecks } from '../actions'
 
 class Decks extends Component {
   state = {
@@ -19,37 +20,36 @@ class Decks extends Component {
     ready: false
   }
   componentDidMount() {
-    this.focusListener = this.props.navigation.addListener('didFocus', () => {
-      getDecks().then((items) =>
-        this.setState(() => ({ ready: true, decks: items }))
-      )
-    })
-  }
+    const { dispatch } = this.props
 
-  componentWillUnmount() {
-    this.focusListener.remove()
+    getDecks()
+      .then((items) => dispatch(receiveDecks(items)))
+      .then(() => this.setState({ ready: true }))
   }
 
   renderItem = ({ item }) => {
-    const cardText = item.cardCount === 1 ? 'card' : 'cards'
     return (
-      <TouchableOpacity style={styles.item}>
-        <Text style={styles.titleText}>{item.title}</Text>
-        <Text style={styles.subTitle}>
-          {item.cardCount} {cardText}
-        </Text>
+      <TouchableOpacity
+        onPress={() =>
+          this.props.navigation.navigate('DeckDetail', {
+            deckId: item.title
+          })
+        }
+      >
+        <Deck title={item.title} count={item.questions.length} />
       </TouchableOpacity>
     )
   }
 
   render() {
-    const { decks, ready } = this.state
+    const { decks } = this.props
+    const { ready } = this.state
 
     if (!ready) return <AppLoading />
 
     if (decks.length === 0)
       return (
-        <View style={styles.emptyContainer}>
+        <View style={styles.centered}>
           <MaterialCommunityIcons
             name={'cards-playing-outline'}
             size={100}
@@ -60,7 +60,7 @@ class Decks extends Component {
       )
 
     return (
-      <View style={{ justifyContent: 'center' }}>
+      <View style={styles.container}>
         <FlatList
           data={decks}
           renderItem={this.renderItem}
@@ -73,35 +73,19 @@ class Decks extends Component {
   }
 }
 
+function mapStateToProps(decks) {
+  return {
+    decks: Object.values(decks)
+  }
+}
+
 const styles = StyleSheet.create({
-  item: {
-    backgroundColor: lightGrey,
-    borderRadius: Platform.OS === 'ios' ? 16 : 2,
-    padding: 20,
+  container: {
     marginLeft: 10,
     marginRight: 10,
-    marginTop: 10,
-    justifyContent: 'center',
-    shadowRadius: 3,
-    shadowOpacity: 0.8,
-    shadowColor: 'rgba(0, 0, 0, 0.24)',
-    shadowOffset: {
-      width: 0,
-      height: 3
-    }
+    justifyContent: 'center'
   },
-  titleText: {
-    fontSize: 20,
-    paddingTop: 20,
-    paddingBottom: 10,
-    textAlign: 'center'
-  },
-  subTitle: {
-    textAlign: 'center',
-    fontSize: 16,
-    color: darkGrey
-  },
-  emptyContainer: {
+  centered: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
@@ -111,4 +95,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default connect()(Decks)
+export default connect(mapStateToProps)(Decks)
