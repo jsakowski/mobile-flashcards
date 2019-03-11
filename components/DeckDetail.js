@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Platform } from 'react-native'
 import { connect } from 'react-redux'
 import Deck from './Deck'
 import SubmitBtn from './SubmitBtn'
-import { orange } from '../utils/colors'
+import { lightPrimary, accent } from '../utils/colors'
 
 class DeckDetail extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -21,7 +21,13 @@ class DeckDetail extends Component {
 
     return (
       <View style={styles.container}>
-        <Deck title={deck.title} count={deck.questions.length} />
+        <View style={styles.deckContainer}>
+          <Deck
+            title={deck.title}
+            count={deck.questions.length}
+            type={'card'}
+          />
+        </View>
         <View style={{ marginTop: 60 }}>
           <SubmitBtn
             onPress={this.submit}
@@ -33,7 +39,7 @@ class DeckDetail extends Component {
           <SubmitBtn
             onPress={this.submit}
             btnText={'Start Quiz'}
-            color={orange}
+            color={accent}
             align={'centered'}
           />
         </View>
@@ -56,6 +62,19 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     justifyContent: 'center'
+  },
+  deckContainer: {
+    backgroundColor: lightPrimary,
+    borderRadius: Platform.OS === 'ios' ? 16 : 2,
+    padding: 10,
+    marginTop: 10,
+    shadowRadius: 3,
+    shadowOpacity: 0.8,
+    shadowColor: 'rgba(0, 0, 0, 0.24)',
+    shadowOffset: {
+      width: 0,
+      height: 3
+    }
   }
 })
 

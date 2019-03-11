@@ -1,11 +1,11 @@
 import React from 'react'
 import { TouchableOpacity, Text, StyleSheet, Platform } from 'react-native'
-import { darkGrey, white } from '../utils/colors'
+import { textLight, primary } from '../utils/colors'
 
 function SubmitBtn({
   onPress,
   btnText,
-  color = darkGrey,
+  color = primary,
   align = Platform.OS === 'ios' ? 'centered' : 'rightAlined'
 }) {
   return (
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     borderRadius: 7
   },
   submitBtnText: {
-    color: white,
+    color: textLight,
     fontSize: 18,
     textAlign: 'center'
   },

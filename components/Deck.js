@@ -1,14 +1,16 @@
 import React from 'react'
-import { View, Text, StyleSheet, Platform } from 'react-native'
-import { lightGrey, darkGrey } from '../utils/colors'
+import { View, Text, StyleSheet } from 'react-native'
+import { textPrimary, textSecondary } from '../utils/colors'
 
-export default function Deck({ title, count }) {
+export default function Deck({ title, count, type = 'row' }) {
   const cardText = count === 1 ? 'card' : 'cards'
 
   return (
-    <View style={styles.item}>
-      <Text style={styles.titleText}>{title}</Text>
-      <Text style={styles.subTitle}>
+    <View style={styles.container}>
+      <Text style={[styles.titleText, type === 'card' ? styles.cardTitle : {}]}>
+        {title}
+      </Text>
+      <Text style={[styles.subTitle, type === 'card' ? styles.cardTitle : {}]}>
         {count} {cardText}
       </Text>
     </View>
@@ -16,28 +18,19 @@ export default function Deck({ title, count }) {
 }
 
 const styles = StyleSheet.create({
-  item: {
-    backgroundColor: lightGrey,
-    borderRadius: Platform.OS === 'ios' ? 16 : 2,
-    padding: 20,
-    marginTop: 10,
-    shadowRadius: 3,
-    shadowOpacity: 0.8,
-    shadowColor: 'rgba(0, 0, 0, 0.24)',
-    shadowOffset: {
-      width: 0,
-      height: 3
-    }
+  container: {
+    padding: 10
+  },
+  cardTitle: {
+    textAlign: 'center'
   },
   titleText: {
     fontSize: 20,
-    paddingTop: 20,
-    paddingBottom: 10,
-    textAlign: 'center'
+    paddingBottom: 5,
+    color: textPrimary
   },
   subTitle: {
-    textAlign: 'center',
     fontSize: 16,
-    color: darkGrey
+    color: textSecondary
   }
 })

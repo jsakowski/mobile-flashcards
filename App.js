@@ -14,7 +14,7 @@ import Decks from './components/Decks'
 import AddDeck from './components/AddDeck'
 import DeckDetail from './components/DeckDetail'
 import FlashcardsStatusBar from './components/FlashcardsStatusBar'
-import { darkGrey, white } from './utils/colors'
+import { primary, textLight, darkPrimary } from './utils/colors'
 
 const RouteConfigs = {
   Decks: {
@@ -27,7 +27,8 @@ const RouteConfigs = {
           size={30}
           color={tintColor}
         />
-      )
+      ),
+      swipeEnabled: false
     }
   },
   AddDeck: {
@@ -36,7 +37,8 @@ const RouteConfigs = {
       tabBarLabel: 'Add Deck',
       tabBarIcon: ({ tintColor }) => (
         <Ionicons name='ios-add' size={30} color={tintColor} />
-      )
+      ),
+      swipeEnabled: false
     }
   }
 }
@@ -44,10 +46,10 @@ const RouteConfigs = {
 const TabNavigatorConfig = {
   lazy: true,
   tabBarOptions: {
-    activeTintColor: Platform.OS === 'ios' ? darkGrey : white,
+    activeTintColor: Platform.OS === 'ios' ? darkPrimary : textLight,
     style: {
       height: 58,
-      backgroundColor: Platform.OS === 'ios' ? white : darkGrey,
+      backgroundColor: Platform.OS === 'ios' ? textLight : primary,
       shadowColor: 'rgba(0, 0, 0, 0.24)',
       shadowOffset: {
         width: 0,
@@ -57,6 +59,9 @@ const TabNavigatorConfig = {
       shadowOpacity: 1
     },
     safeAreaInset: true
+  },
+  navigationOptions: {
+    swipeEnabled: false
   }
 }
 
@@ -71,15 +76,19 @@ const MainNavigator = createAppContainer(
     home: {
       screen: Tabs,
       navigationOptions: {
-        header: null
+        title: 'Flashcards',
+        headerTintColor: textLight,
+        headerStyle: {
+          backgroundColor: primary
+        }
       }
     },
     DeckDetail: {
       screen: DeckDetail,
       navigationOptions: ({ navigation }) => ({
-        headerTintColor: white,
+        headerTintColor: textLight,
         headerStyle: {
-          backgroundColor: darkGrey
+          backgroundColor: primary
         }
       })
     }
@@ -92,7 +101,7 @@ export default class App extends React.Component {
       <Provider store={createStore(decks)}>
         <View style={styles.container}>
           <FlashcardsStatusBar
-            backgroundColor={darkGrey}
+            backgroundColor={primary}
             barStyle='light-content'
           />
           <SafeAreaView style={styles.container}>

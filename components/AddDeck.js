@@ -11,18 +11,30 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { connect } from 'react-redux'
 import { addDeck } from '../actions'
 import SubmitBtn from './SubmitBtn'
-import { white, lightGrey, grey } from '../utils/colors'
+import {
+  textLight,
+  textSecondary,
+  lightPrimary,
+  attention
+} from '../utils/colors'
 import { saveDeckTitle } from '../utils/api'
+
+const initialState = {
+  title: '',
+  isValid: false,
+  validated: false
+}
 
 class AddDeck extends Component {
   state = {
-    title: ''
+    ...initialState
   }
 
   onChange = (value) => {
     this.setState({
-      title: value
+      title: value.trim()
     })
+    this.validate()
   }
 
   componentDidMount() {
@@ -44,28 +56,42 @@ class AddDeck extends Component {
   }
 
   submit = () => {
-    const { title } = this.state
+    const { title, isValid } = this.state
 
-    this.setState({
-      title: ''
-    })
+    this.validate()
 
-    this.props.dispatch(
-      addDeck({
-        [title]: {
-          title: title,
-          questions: []
-        }
+    console.log('Add Deck -- submit', title, isValid)
+
+    if (isValid) {
+      this.setState({
+        ...initialState
       })
-    )
 
-    saveDeckTitle(title)
+      this.props.dispatch(
+        addDeck({
+          [title]: {
+            title: title,
+            questions: []
+          }
+        })
+      )
 
-    // navigation to the new deck
+      saveDeckTitle(title)
+
+      // navigation to the new deck
+    }
+  }
+
+  validate = () => {
+    const { title } = this.state
+    this.setState({
+      isValid: title.length > 0,
+      validated: true
+    })
   }
 
   render = () => {
-    const { title } = this.state
+    const { title, validated } = this.state
 
     return (
       <KeyboardAvoidingView style={styles.container} behavior='padding'>
@@ -76,16 +102,22 @@ class AddDeck extends Component {
           <View style={styles.deckContainer}>
             <View style={styles.deckTitleContainer}>
               <TextInput
-                style={styles.textField}
+                style={[
+                  styles.textField,
+                  title.length === 0 && validated ? styles.textFieldError : {}
+                ]}
                 placeholder={'Deck Title'}
                 onChangeText={(value) => this.onChange(value)}
                 value={title}
-                autoFocus={true}
                 ref={(ref) => (this.titleInput = ref)}
                 blurOnSubmit={false}
               />
             </View>
-            <SubmitBtn onPress={this.submit} btnText={'Create Deck'} />
+            <SubmitBtn
+              onPress={this.submit}
+              btnText={'Create Deck'}
+              disabled={title.length > 0}
+            />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -97,9 +129,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   },
+  textFieldError: {
+    borderBottomColor: 'red'
+  },
+  textFieldSuccess: {
+    borderBottomColor: 'green'
+  },
   textField: {
-    backgroundColor: white,
-    borderBottomColor: grey,
+    backgroundColor: textLight,
+    borderBottomColor: textSecondary,
     borderBottomWidth: 1,
     padding: 10,
     marginLeft: 10,
@@ -113,7 +151,7 @@ const styles = StyleSheet.create({
     marginTop: 17
   },
   deckTitleContainer: {
-    backgroundColor: lightGrey,
+    backgroundColor: lightPrimary,
     borderRadius: Platform.OS === 'ios' ? 16 : 2,
     padding: 20,
     shadowRadius: 3,

@@ -4,21 +4,29 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  TouchableOpacity
+  TouchableHighlight
 } from 'react-native'
 import { AppLoading } from 'expo'
 import { connect } from 'react-redux'
-import { getDecks } from '../utils/api'
-import { darkGrey } from '../utils/colors'
+import Swipeout from 'react-native-swipeout'
+import { getDecks, deleteDeck } from '../utils/api'
+import { darkGrey, white, divider, lightPrimary } from '../utils/colors'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Deck from './Deck'
-import { receiveDecks } from '../actions'
+import { receiveDecks, removeDeck } from '../actions'
 
 class Decks extends Component {
   state = {
-    decks: [],
     ready: false
   }
+
+  handleDeleteDeck = (item) => {
+    const { dispatch } = this.props
+
+    dispatch(removeDeck(item.title))
+    deleteDeck(item.title)
+  }
+
   componentDidMount() {
     const { dispatch } = this.props
 
@@ -28,16 +36,48 @@ class Decks extends Component {
   }
 
   renderItem = ({ item }) => {
-    return (
-      <TouchableOpacity
-        onPress={() =>
-          this.props.navigation.navigate('DeckDetail', {
-            deckId: item.title
-          })
+    const swipeoutBtns = [
+      {
+        text: 'Delete',
+        backgroundColor: '#FF0000',
+        onPress: () => {
+          this.handleDeleteDeck(item)
         }
-      >
-        <Deck title={item.title} count={item.questions.length} />
-      </TouchableOpacity>
+      }
+    ]
+
+    return (
+      <View>
+        <Swipeout
+          right={swipeoutBtns}
+          autoClose={true}
+          backgroundColor={'#FF0000'}
+        >
+          <TouchableHighlight
+            style={styles.deckContainer}
+            onPress={() =>
+              this.props.navigation.navigate('DeckDetail', {
+                deckId: item.title
+              })
+            }
+          >
+            <View style={styles.row}>
+              <MaterialCommunityIcons
+                name={'cards-variant'}
+                size={30}
+                style={{ color: white, paddingLeft: 10 }}
+              />
+              <Deck title={item.title} count={item.questions.length} />
+            </View>
+          </TouchableHighlight>
+        </Swipeout>
+        <View
+          style={{
+            borderBottomWidth: 1,
+            borderBottomColor: divider
+          }}
+        />
+      </View>
     )
   }
 
@@ -81,9 +121,8 @@ function mapStateToProps(decks) {
 
 const styles = StyleSheet.create({
   container: {
-    marginLeft: 10,
-    marginRight: 10,
-    justifyContent: 'center'
+    flex: 1,
+    backgroundColor: white
   },
   centered: {
     flex: 1,
@@ -92,6 +131,14 @@ const styles = StyleSheet.create({
   },
   deckIcon: {
     color: darkGrey
+  },
+  deckContainer: {
+    backgroundColor: lightPrimary
+  },
+  row: {
+    flexDirection: 'row',
+    flex: 1,
+    alignItems: 'center'
   }
 })
 
