@@ -13,6 +13,7 @@ import decks from './reducers'
 import Decks from './components/Decks'
 import AddDeck from './components/AddDeck'
 import DeckDetail from './components/DeckDetail'
+import AddCard from './components/AddCard'
 import FlashcardsStatusBar from './components/FlashcardsStatusBar'
 import { primary, textLight, darkPrimary } from './utils/colors'
 
@@ -70,23 +71,39 @@ const Tabs = createAppContainer(
     ? createBottomTabNavigator(RouteConfigs, TabNavigatorConfig)
     : createMaterialTopTabNavigator(RouteConfigs, TabNavigatorConfig)
 )
-
-const MainNavigator = createAppContainer(
-  createStackNavigator({
-    home: {
-      screen: Tabs,
-      navigationOptions: {
+const mainNavigationOptions =
+  Platform.OS === 'ios'
+    ? {
         title: 'Flashcards',
         headerTintColor: textLight,
         headerStyle: {
           backgroundColor: primary
         }
       }
+    : {
+        header: null
+      }
+
+const MainNavigator = createAppContainer(
+  createStackNavigator({
+    home: {
+      screen: Tabs,
+      navigationOptions: mainNavigationOptions
     },
     DeckDetail: {
       screen: DeckDetail,
       navigationOptions: ({ navigation }) => ({
         headerTintColor: textLight,
+        headerStyle: {
+          backgroundColor: primary
+        }
+      })
+    },
+    AddCard: {
+      screen: AddCard,
+      navigationOptions: ({ navigation }) => ({
+        headerTintColor: textLight,
+        title: 'Add Card',
         headerStyle: {
           backgroundColor: primary
         }

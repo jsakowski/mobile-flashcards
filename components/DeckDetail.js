@@ -16,6 +16,16 @@ class DeckDetail extends Component {
 
   submit = () => {}
 
+  toAddCard = () => {
+    const { deck } = this.props
+
+    console.log('DeckDetail -- toAddCard', deck.title)
+
+    this.props.navigation.navigate('AddCard', {
+      deckId: deck.title
+    })
+  }
+
   render = () => {
     const { deck } = this.props
 
@@ -30,7 +40,7 @@ class DeckDetail extends Component {
         </View>
         <View style={{ marginTop: 60 }}>
           <SubmitBtn
-            onPress={this.submit}
+            onPress={this.toAddCard}
             btnText={'Add Card'}
             align={'centered'}
           />

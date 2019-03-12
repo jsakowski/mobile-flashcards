@@ -48,11 +48,7 @@ class Decks extends Component {
 
     return (
       <View>
-        <Swipeout
-          right={swipeoutBtns}
-          autoClose={true}
-          backgroundColor={'#FF0000'}
-        >
+        <Swipeout right={swipeoutBtns} autoClose={true} backgroundColor={'red'}>
           <TouchableHighlight
             style={styles.deckContainer}
             onPress={() =>

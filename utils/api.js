@@ -1,7 +1,7 @@
 import React from 'react'
 import { AsyncStorage } from 'react-native'
 
-const DECK_STORAGE_KEY = 'UdaciFitness:notifications'
+const DECK_STORAGE_KEY = 'MobileFlashcards:decks'
 
 const dummyData = {
   React: {
@@ -58,14 +58,29 @@ export function saveDeckTitle(title) {
 
 export function deleteDeck(key) {
   return AsyncStorage.getItem(DECK_STORAGE_KEY).then((results) => {
-    const data = JSON.parse(results)
-    data[key] = undefined
-    delete data[key]
-    AsyncStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(data))
+    const decks = JSON.parse(results)
+    decks[key] = undefined
+    delete decks[key]
+    AsyncStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(decks))
   })
 }
 
-export function addCardToDeck(title, card) {}
+export function addCardToDeck(deckId, card) {
+  return AsyncStorage.getItem(DECK_STORAGE_KEY)
+    .then((results) => {
+      const decks = JSON.parse(results)
+
+      let deck = decks[deckId]
+      deck.questions.push(card)
+      return deck
+    })
+    .then((deck) => {
+      AsyncStorage.mergeItem(
+        DECK_STORAGE_KEY,
+        JSON.stringify({ [deckId]: deck })
+      )
+    })
+}
 
 function setDummyData() {
   AsyncStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(dummyData))

@@ -11,12 +11,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { connect } from 'react-redux'
 import { addDeck } from '../actions'
 import SubmitBtn from './SubmitBtn'
-import {
-  textLight,
-  textSecondary,
-  lightPrimary,
-  attention
-} from '../utils/colors'
+import { textLight, textSecondary, lightPrimary } from '../utils/colors'
 import { saveDeckTitle } from '../utils/api'
 
 const initialState = {
@@ -32,7 +27,7 @@ class AddDeck extends Component {
 
   onChange = (value) => {
     this.setState({
-      title: value.trim()
+      title: value
     })
     this.validate()
   }
@@ -94,7 +89,11 @@ class AddDeck extends Component {
     const { title, validated } = this.state
 
     return (
-      <KeyboardAvoidingView style={styles.container} behavior='padding'>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior='padding'
+        keyboardVerticalOffset={100}
+      >
         <ScrollView>
           <Text style={styles.titleText}>
             What is the title on your new deck?
@@ -113,11 +112,7 @@ class AddDeck extends Component {
                 blurOnSubmit={false}
               />
             </View>
-            <SubmitBtn
-              onPress={this.submit}
-              btnText={'Create Deck'}
-              disabled={title.length > 0}
-            />
+            <SubmitBtn onPress={this.submit} btnText={'Create Deck'} />
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
