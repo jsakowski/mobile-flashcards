@@ -10,10 +10,11 @@ import { AppLoading } from 'expo'
 import { connect } from 'react-redux'
 import Swipeout from 'react-native-swipeout'
 import { getDecks, deleteDeck } from '../utils/api'
-import { darkGrey, white, divider, lightPrimary } from '../utils/colors'
+import { darkGrey, white, lightPrimary, darkPrimary } from '../utils/colors'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Deck from './Deck'
 import { receiveDecks, removeDeck } from '../actions'
+import Divider from './Divider'
 
 class Decks extends Component {
   state = {
@@ -51,6 +52,7 @@ class Decks extends Component {
         <Swipeout right={swipeoutBtns} autoClose={true} backgroundColor={'red'}>
           <TouchableHighlight
             style={styles.deckContainer}
+            underlayColor={darkPrimary}
             onPress={() =>
               this.props.navigation.navigate('DeckDetail', {
                 deckId: item.title
@@ -67,12 +69,7 @@ class Decks extends Component {
             </View>
           </TouchableHighlight>
         </Swipeout>
-        <View
-          style={{
-            borderBottomWidth: 1,
-            borderBottomColor: divider
-          }}
-        />
+        <Divider />
       </View>
     )
   }

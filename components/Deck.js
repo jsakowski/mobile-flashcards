@@ -7,10 +7,20 @@ export default function Deck({ title, count, type = 'row' }) {
 
   return (
     <View style={styles.container}>
-      <Text style={[styles.titleText, type === 'card' ? styles.cardTitle : {}]}>
+      <Text
+        style={[
+          styles.title,
+          type === 'card' ? styles.cardTitle : styles.itemTitle
+        ]}
+      >
         {title}
       </Text>
-      <Text style={[styles.subTitle, type === 'card' ? styles.cardTitle : {}]}>
+      <Text
+        style={[
+          styles.subTitle,
+          type === 'card' ? styles.cardText : styles.itemText
+        ]}
+      >
         {count} {cardText}
       </Text>
     </View>
@@ -22,15 +32,25 @@ const styles = StyleSheet.create({
     padding: 10
   },
   cardTitle: {
+    textAlign: 'center',
+    fontSize: 20,
+    paddingBottom: 5
+  },
+  itemTitle: {
+    fontSize: 15,
+    paddingBottom: 5
+  },
+  cardText: {
+    fontSize: 16,
     textAlign: 'center'
   },
-  titleText: {
-    fontSize: 20,
-    paddingBottom: 5,
+  itemText: {
+    fontSize: 12
+  },
+  title: {
     color: textPrimary
   },
   subTitle: {
-    fontSize: 16,
     color: textSecondary
   }
 })

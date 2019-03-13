@@ -14,12 +14,16 @@ class DeckDetail extends Component {
     }
   }
 
-  submit = () => {}
+  toQuiz = () => {
+    const { deck } = this.props
+
+    this.props.navigation.navigate('Quiz', {
+      deckId: deck.title
+    })
+  }
 
   toAddCard = () => {
     const { deck } = this.props
-
-    console.log('DeckDetail -- toAddCard', deck.title)
 
     this.props.navigation.navigate('AddCard', {
       deckId: deck.title
@@ -47,7 +51,7 @@ class DeckDetail extends Component {
         </View>
         <View style={{ marginTop: 20 }}>
           <SubmitBtn
-            onPress={this.submit}
+            onPress={this.toQuiz}
             btnText={'Start Quiz'}
             color={accent}
             align={'centered'}

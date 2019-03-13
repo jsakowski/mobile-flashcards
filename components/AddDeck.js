@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
     marginBottom: 17
   },
   titleText: {
-    fontSize: 40,
+    fontSize: 30,
     paddingTop: 20,
     paddingBottom: 10,
     textAlign: 'center'

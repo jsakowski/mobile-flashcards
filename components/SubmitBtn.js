@@ -23,9 +23,11 @@ function SubmitBtn({
     </TouchableOpacity>
   )
 }
+
 const getStyle = (name) => {
   return styles[name]
 }
+
 const styles = StyleSheet.create({
   centered: {
     padding: 10,
@@ -38,7 +40,7 @@ const styles = StyleSheet.create({
   },
   submitBtnText: {
     color: textLight,
-    fontSize: 18,
+    fontSize: 15,
     textAlign: 'center'
   },
   rightAlined: {
