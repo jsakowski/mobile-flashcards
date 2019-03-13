@@ -3,25 +3,29 @@ import { View, Text, StyleSheet } from 'react-native'
 import { textPrimary, textSecondary } from '../utils/colors'
 
 export default function Deck({ title, count, type = 'row' }) {
-  const cardText = count === 1 ? 'card' : 'cards'
+  const countText = count === 1 ? 'card' : 'cards'
 
   return (
     <View style={styles.container}>
-      <Text
-        style={[
-          styles.title,
-          type === 'card' ? styles.cardTitle : styles.itemTitle
-        ]}
-      >
-        {title}
-      </Text>
+      {type === 'card' ? (
+        <Text style={[styles.title, styles.cardTitle]}>{title}</Text>
+      ) : (
+        <Text
+          numberOfLines={1}
+          ellipsizeMode='tail'
+          style={[styles.title, styles.itemTitle]}
+        >
+          {title}
+        </Text>
+      )}
+
       <Text
         style={[
           styles.subTitle,
           type === 'card' ? styles.cardText : styles.itemText
         ]}
       >
-        {count} {cardText}
+        {count} {countText}
       </Text>
     </View>
   )

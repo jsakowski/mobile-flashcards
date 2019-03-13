@@ -131,7 +131,8 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+    marginRight: 40
   }
 })
 

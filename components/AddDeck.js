@@ -12,7 +12,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { connect } from 'react-redux'
 import { addDeck } from '../actions'
 import SubmitBtn from './SubmitBtn'
-import { textLight, textSecondary, lightPrimary } from '../utils/colors'
+import { textSecondary, lightPrimary } from '../utils/colors'
 import { saveDeckTitle } from '../utils/api'
 import { isBlank } from '../utils/validation'
 
@@ -103,7 +103,7 @@ class AddDeck extends Component {
                   titleError !== '' ? styles.textFieldError : {}
                 ]}
                 placeholder={'Deck Title'}
-                placeholderTextColor={'#cccccc'}
+                placeholderTextColor={textSecondary}
                 onChangeText={(value) => this.onChange(value)}
                 value={title}
                 ref={(ref) => (this.titleInput = ref)}
@@ -145,7 +145,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2
   },
   textField: {
-    backgroundColor: textLight,
     borderBottomColor: textSecondary,
     borderBottomWidth: 1,
     padding: 10,
