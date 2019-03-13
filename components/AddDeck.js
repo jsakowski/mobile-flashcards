@@ -57,7 +57,7 @@ class AddDeck extends Component {
 
   submit = () => {
     const { title } = this.state
-    const { dispatch, navigation } = this.props
+    const { handleAddDeck, navigation } = this.props
 
     const titleError = this.validate(title)
     this.setState({ titleError: titleError })
@@ -67,23 +67,10 @@ class AddDeck extends Component {
     this.setState({
       ...initialState
     })
-
     const deckTitle = title.trim()
+    handleAddDeck(deckTitle)
 
-    dispatch(
-      addDeck({
-        [deckTitle]: {
-          title: deckTitle,
-          questions: []
-        }
-      })
-    )
-
-    saveDeckTitle(deckTitle)
-
-    console.log(deckTitle)
-
-    // navigation to the new deck
+    // navigation to Decks Tab and then to the new deck
     Promise.all([navigation.dispatch(NavigationActions.back())]).then(() => {
       navigation.navigate('DeckDetail', {
         deckId: deckTitle
@@ -133,6 +120,22 @@ class AddDeck extends Component {
   }
 }
 
+function mapDispatchToProps(dispatch) {
+  return {
+    handleAddDeck: (deckTitle) => {
+      dispatch(
+        addDeck({
+          [deckTitle]: {
+            title: deckTitle,
+            questions: []
+          }
+        })
+      )
+      saveDeckTitle(deckTitle)
+    }
+  }
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1
@@ -177,4 +180,7 @@ const styles = StyleSheet.create({
   }
 })
 
-export default connect()(AddDeck)
+export default connect(
+  null,
+  mapDispatchToProps
+)(AddDeck)

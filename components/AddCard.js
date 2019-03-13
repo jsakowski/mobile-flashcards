@@ -74,11 +74,9 @@ class AddCard extends Component {
 
     // update Redux
     handleAddCard({
-      question: question,
-      answer: answer
+      question: question.trim(),
+      answer: answer.trim()
     })
-
-    // update storage
 
     // redirect back to deck
     goBack()
@@ -156,10 +154,6 @@ class AddCard extends Component {
   }
 }
 
-function mapStateToProps() {
-  return {}
-}
-
 function mapDispatchToProps(dispatch, { navigation }) {
   const { deckId } = navigation.state.params
 
@@ -171,6 +165,7 @@ function mapDispatchToProps(dispatch, { navigation }) {
     }
   }
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -209,6 +204,6 @@ const styles = StyleSheet.create({
 })
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(AddCard)
