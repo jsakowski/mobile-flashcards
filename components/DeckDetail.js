@@ -4,6 +4,9 @@ import { connect } from 'react-redux'
 import Deck from './Deck'
 import SubmitBtn from './SubmitBtn'
 import { lightPrimary, accent } from '../utils/colors'
+import Cards from './Cards'
+import { deleteCard } from '../actions'
+import { deleteCardFromDeck } from '../utils/api'
 
 class DeckDetail extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -30,33 +33,52 @@ class DeckDetail extends Component {
     })
   }
 
+  onCardDelete = (cardId) => {
+    const { handleDeleteCard } = this.props
+    handleDeleteCard(cardId)
+  }
+
   render = () => {
     const { deck } = this.props
+    const hasCards = deck.questions.length > 0
 
     return (
       <View style={styles.container}>
-        <View style={styles.deckContainer}>
-          <Deck
-            title={deck.title}
-            count={deck.questions.length}
-            type={'card'}
-          />
+        <View style={styles.header}>
+          <View style={styles.deckContainer}>
+            <Deck
+              title={deck.title}
+              count={deck.questions.length}
+              type={'card'}
+            />
+          </View>
+          {hasCards && (
+            <View style={{ marginTop: 20 }}>
+              <SubmitBtn
+                onPress={this.toQuiz}
+                btnText={'Start Quiz'}
+                color={accent}
+                align={'centered'}
+              />
+            </View>
+          )}
+          {!hasCards && (
+            <View style={{ marginTop: 20 }}>
+              <SubmitBtn
+                onPress={this.toAddCard}
+                btnText={'Add Card'}
+                align={'centered'}
+              />
+            </View>
+          )}
         </View>
-        <View style={{ marginTop: 60 }}>
-          <SubmitBtn
-            onPress={this.toAddCard}
-            btnText={'Add Card'}
-            align={'centered'}
+        {hasCards && (
+          <Cards
+            questions={deck.questions}
+            onAddCard={this.toAddCard}
+            onDeleteCard={this.onCardDelete}
           />
-        </View>
-        <View style={{ marginTop: 20 }}>
-          <SubmitBtn
-            onPress={this.toQuiz}
-            btnText={'Start Quiz'}
-            color={accent}
-            align={'centered'}
-          />
-        </View>
+        )}
       </View>
     )
   }
@@ -70,8 +92,22 @@ function mapStateToProps(state, { navigation }) {
   }
 }
 
+function mapDispatchToProps(dispatch, { navigation }) {
+  const { deckId } = navigation.state.params
+
+  return {
+    handleDeleteCard: (cardId) => {
+      dispatch(deleteCard(deckId, cardId))
+      deleteCardFromDeck(deckId, cardId)
+    }
+  }
+}
+
 const styles = StyleSheet.create({
   container: {
+    flex: 1
+  },
+  header: {
     marginLeft: 10,
     marginRight: 10,
     justifyContent: 'center'
@@ -91,4 +127,7 @@ const styles = StyleSheet.create({
   }
 })
 
-export default connect(mapStateToProps)(DeckDetail)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DeckDetail)

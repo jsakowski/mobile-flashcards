@@ -70,7 +70,7 @@ class AddDeck extends Component {
     const deckTitle = title.trim()
     handleAddDeck(deckTitle)
 
-    // navigation to Decks Tab and then to the new deck
+    //navigation to Decks Tab and then to the new deck
     Promise.all([navigation.dispatch(NavigationActions.back())]).then(() => {
       navigation.navigate('DeckDetail', {
         deckId: deckTitle

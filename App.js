@@ -96,7 +96,7 @@ const MainNavigator = createAppContainer(
       AddCard: {
         screen: AddCard,
         navigationOptions: {
-          title: 'Add Card'
+          title: ' New Question'
         }
       },
       Quiz: {

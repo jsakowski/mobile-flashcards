@@ -9,7 +9,7 @@ import {
   Platform
 } from 'react-native'
 import SubmitBtn from './SubmitBtn'
-import { textLight, lightPrimary, divider } from '../utils/colors'
+import { textSecondary, lightPrimary, divider } from '../utils/colors'
 import { isBlank } from '../utils/validation'
 import { addCard } from '../actions'
 import { addCardToDeck } from '../utils/api'
@@ -99,7 +99,7 @@ class AddCard extends Component {
                   questionError !== '' ? styles.textFieldError : {}
                 ]}
                 placeholder={'Question'}
-                placeholderTextColor={textLight}
+                placeholderTextColor={textSecondary}
                 onChangeText={(value) => this.handleChange('question', value)}
                 value={question}
                 ref={(ref) => (this.questionInput = ref)}
@@ -130,7 +130,7 @@ class AddCard extends Component {
                   answerError !== '' ? styles.textFieldError : {}
                 ]}
                 placeholder={'Answer'}
-                placeholderTextColor={textLight}
+                placeholderTextColor={textSecondary}
                 onChangeText={(value) => this.handleChange('answer', value)}
                 value={answer}
                 multiline={true}

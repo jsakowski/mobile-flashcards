@@ -8,13 +8,11 @@ export default function Deck({ title, count, type = 'row' }) {
   return (
     <View style={styles.container}>
       {type === 'card' ? (
-        <Text style={[styles.title, styles.cardTitle]}>{title}</Text>
+        <Text numberOfLines={2} style={[styles.title, styles.cardTitle]}>
+          {title}
+        </Text>
       ) : (
-        <Text
-          numberOfLines={1}
-          ellipsizeMode='tail'
-          style={[styles.title, styles.itemTitle]}
-        >
+        <Text numberOfLines={1} style={[styles.title, styles.itemTitle]}>
           {title}
         </Text>
       )}
