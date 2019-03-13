@@ -46,6 +46,7 @@ const RouteConfigs = {
 }
 
 const TabNavigatorConfig = {
+  initialRouteName: 'Decks',
   lazy: true,
   tabBarOptions: {
     activeTintColor: Platform.OS === 'ios' ? darkPrimary : textLight,
@@ -85,7 +86,7 @@ const mainNavigationOptions =
 const MainNavigator = createAppContainer(
   createStackNavigator(
     {
-      home: {
+      Home: {
         screen: Tabs,
         navigationOptions: mainNavigationOptions
       },

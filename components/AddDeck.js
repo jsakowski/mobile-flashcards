@@ -7,6 +7,7 @@ import {
   Platform,
   TextInput
 } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import { ScrollView } from 'react-native-gesture-handler'
 import { connect } from 'react-redux'
 import { addDeck } from '../actions'
@@ -56,6 +57,7 @@ class AddDeck extends Component {
 
   submit = () => {
     const { title } = this.state
+    const { dispatch, navigation } = this.props
 
     const titleError = this.validate(title)
     this.setState({ titleError: titleError })
@@ -68,10 +70,10 @@ class AddDeck extends Component {
 
     const deckTitle = title.trim()
 
-    this.props.dispatch(
+    dispatch(
       addDeck({
         [deckTitle]: {
-          title: deckTitle.trim(),
+          title: deckTitle,
           questions: []
         }
       })
@@ -79,7 +81,14 @@ class AddDeck extends Component {
 
     saveDeckTitle(deckTitle)
 
+    console.log(deckTitle)
+
     // navigation to the new deck
+    Promise.all([navigation.dispatch(NavigationActions.back())]).then(() => {
+      navigation.navigate('DeckDetail', {
+        deckId: deckTitle
+      })
+    })
   }
 
   validate = (value) => {
@@ -111,7 +120,9 @@ class AddDeck extends Component {
                 onChangeText={(value) => this.onChange(value)}
                 value={title}
                 ref={(ref) => (this.titleInput = ref)}
-                blurOnSubmit={false}
+                onBlur={() => {
+                  this.setState({ titleError: this.validate(this.state.title) })
+                }}
               />
             </View>
             <SubmitBtn onPress={this.submit} btnText={'Create Deck'} />
@@ -129,9 +140,6 @@ const styles = StyleSheet.create({
   textFieldError: {
     borderBottomColor: 'red',
     borderBottomWidth: 2
-  },
-  textFieldSuccess: {
-    borderBottomColor: 'green'
   },
   textField: {
     backgroundColor: textLight,
