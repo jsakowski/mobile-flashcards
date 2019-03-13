@@ -30,7 +30,8 @@ const getStyle = (name) => {
 
 const styles = StyleSheet.create({
   centered: {
-    padding: 10,
+    paddingTop: 12,
+    paddingBottom: 5,
     height: 45,
     marginLeft: 40,
     marginRight: 40

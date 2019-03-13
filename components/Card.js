@@ -4,7 +4,8 @@ import {
   Text,
   StyleSheet,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  ScrollView
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { textLight, lightPrimary, textPrimary, primary } from '../utils/colors'
@@ -19,16 +20,18 @@ const Card = ({ cardText, isFront, height, flip }) => {
         { height: height }
       ]}
     >
-      <View style={styles.textContainer}>
-        <Text
-          style={[
-            styles.text,
-            isFront ? styles.questionText : styles.answerText
-          ]}
-        >
-          {cardText}
-        </Text>
-      </View>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={styles.textContainer}>
+          <Text
+            style={[
+              styles.text,
+              isFront ? styles.questionText : styles.answerText
+            ]}
+          >
+            {cardText}
+          </Text>
+        </View>
+      </ScrollView>
       <Divider />
       <View style={styles.actionContainer}>
         <TouchableOpacity style={styles.action} onPress={flip}>
@@ -48,6 +51,11 @@ const Card = ({ cardText, isFront, height, flip }) => {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1,
+    paddingVertical: 10,
+    justifyContent: 'center'
+  },
   cardContainer: {
     borderRadius: Platform.OS === 'ios' ? 16 : 2,
     shadowRadius: 3,
@@ -66,9 +74,7 @@ const styles = StyleSheet.create({
     backgroundColor: lightPrimary
   },
   textContainer: {
-    padding: 20,
-    flex: 1,
-    justifyContent: 'center'
+    margin: 10
   },
   actionContainer: {
     flexDirection: 'row',
@@ -87,7 +93,8 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   questionText: {
-    color: textLight
+    color: textLight,
+    fontSize: 16
   },
   answerText: {
     color: textPrimary
