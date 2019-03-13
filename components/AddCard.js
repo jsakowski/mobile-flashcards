@@ -97,7 +97,7 @@ class AddCard extends Component {
         behavior='padding'
         keyboardVerticalOffset={120}
       >
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps={'handled'}>
           <View style={styles.cardContainer}>
             <View style={styles.fieldContainer}>
               <TextInput
@@ -106,6 +106,7 @@ class AddCard extends Component {
                   questionError !== '' ? styles.textFieldError : {}
                 ]}
                 placeholder={'Question'}
+                placeholderTextColor={'#cccccc'}
                 onChangeText={(value) => this.handleChange('question', value)}
                 value={question}
                 ref={(ref) => (this.questionInput = ref)}
@@ -136,6 +137,7 @@ class AddCard extends Component {
                   answerError !== '' ? styles.textFieldError : {}
                 ]}
                 placeholder={'Answer'}
+                placeholderTextColor={'#cccccc'}
                 onChangeText={(value) => this.handleChange('answer', value)}
                 value={answer}
                 multiline={true}
@@ -201,7 +203,8 @@ const styles = StyleSheet.create({
     marginBottom: 17
   },
   textFieldError: {
-    borderBottomColor: 'red'
+    borderBottomColor: 'red',
+    borderBottomWidth: 2
   }
 })
 

@@ -13,11 +13,11 @@ import { addDeck } from '../actions'
 import SubmitBtn from './SubmitBtn'
 import { textLight, textSecondary, lightPrimary } from '../utils/colors'
 import { saveDeckTitle } from '../utils/api'
+import { isBlank } from '../utils/validation'
 
 const initialState = {
   title: '',
-  isValid: false,
-  validated: false
+  titleError: ''
 }
 
 class AddDeck extends Component {
@@ -27,13 +27,17 @@ class AddDeck extends Component {
 
   onChange = (value) => {
     this.setState({
-      title: value
+      title: value,
+      titleError: this.validate(value)
     })
-    this.validate()
   }
 
   componentDidMount() {
     this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      this.setState({
+        ...initialState
+      })
+
       this.workaroundFocus()
     })
   }
@@ -51,42 +55,39 @@ class AddDeck extends Component {
   }
 
   submit = () => {
-    const { title, isValid } = this.state
+    const { title } = this.state
 
-    this.validate()
+    const titleError = this.validate(title)
+    this.setState({ titleError: titleError })
 
-    console.log('Add Deck -- submit', title, isValid)
+    if (titleError !== '') return
 
-    if (isValid) {
-      this.setState({
-        ...initialState
+    this.setState({
+      ...initialState
+    })
+
+    const deckTitle = title.trim()
+
+    this.props.dispatch(
+      addDeck({
+        [deckTitle]: {
+          title: deckTitle.trim(),
+          questions: []
+        }
       })
+    )
 
-      this.props.dispatch(
-        addDeck({
-          [title]: {
-            title: title,
-            questions: []
-          }
-        })
-      )
+    saveDeckTitle(deckTitle)
 
-      saveDeckTitle(title)
-
-      // navigation to the new deck
-    }
+    // navigation to the new deck
   }
 
-  validate = () => {
-    const { title } = this.state
-    this.setState({
-      isValid: title.length > 0,
-      validated: true
-    })
+  validate = (value) => {
+    return isBlank(value) ? 'Please enter the title' : ''
   }
 
   render = () => {
-    const { title, validated } = this.state
+    const { title, titleError } = this.state
 
     return (
       <KeyboardAvoidingView
@@ -94,7 +95,7 @@ class AddDeck extends Component {
         behavior='padding'
         keyboardVerticalOffset={100}
       >
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps={'handled'}>
           <Text style={styles.titleText}>
             What is the title on your new deck?
           </Text>
@@ -103,9 +104,10 @@ class AddDeck extends Component {
               <TextInput
                 style={[
                   styles.textField,
-                  title.length === 0 && validated ? styles.textFieldError : {}
+                  titleError !== '' ? styles.textFieldError : {}
                 ]}
                 placeholder={'Deck Title'}
+                placeholderTextColor={'#cccccc'}
                 onChangeText={(value) => this.onChange(value)}
                 value={title}
                 ref={(ref) => (this.titleInput = ref)}
@@ -125,7 +127,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   textFieldError: {
-    borderBottomColor: 'red'
+    borderBottomColor: 'red',
+    borderBottomWidth: 2
   },
   textFieldSuccess: {
     borderBottomColor: 'green'
