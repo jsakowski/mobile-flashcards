@@ -99,6 +99,23 @@ export function deleteCardFromDeck(deckId, cardId) {
     })
 }
 
+export function editCard(deckId, index, card) {
+  return AsyncStorage.getItem(DECK_STORAGE_KEY)
+    .then((results) => {
+      const decks = JSON.parse(results)
+
+      let deck = decks[deckId]
+      deck.questions[index] = card
+      return deck
+    })
+    .then((deck) => {
+      AsyncStorage.mergeItem(
+        DECK_STORAGE_KEY,
+        JSON.stringify({ [deckId]: deck })
+      )
+    })
+}
+
 function setDummyData() {
   AsyncStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(dummyData))
   return dummyData

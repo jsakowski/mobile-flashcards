@@ -11,18 +11,31 @@ import {
 import SubmitBtn from './SubmitBtn'
 import { textSecondary, lightPrimary, divider } from '../utils/colors'
 import { isBlank } from '../utils/validation'
-import { addCard } from '../actions'
-import { addCardToDeck } from '../utils/api'
+import { addCard, updateCard } from '../actions'
+import { addCardToDeck, editCard } from '../utils/api'
 
 const initialState = {
   question: '',
   questionError: '',
   answer: '',
-  answerError: ''
+  answerError: '',
+  isNew: true
 }
 class AddCard extends Component {
+  static navigationOptions = ({ navigation }) => {
+    const { card } = navigation.state.params
+
+    return {
+      title: card === undefined ? 'New Question' : card.question
+    }
+  }
+
   state = {
-    ...initialState
+    question: this.props.card !== null ? this.props.card.question : '',
+    questionError: '',
+    answer: this.props.card !== null ? this.props.card.answer : '',
+    answerError: '',
+    isNew: this.props.card === null
   }
 
   handleChange = (name, value) => {
@@ -50,8 +63,8 @@ class AddCard extends Component {
   }
 
   submit = () => {
-    const { question, answer } = this.state
-    const { goBack, handleAddCard } = this.props
+    const { question, answer, isNew } = this.state
+    const { goBack, handleAddCard, handleEditCard, cardIndex } = this.props
 
     //validate
     const questionError = this.validate('question', question)
@@ -68,10 +81,16 @@ class AddCard extends Component {
     })
 
     // update Redux
-    handleAddCard({
-      question: question.trim(),
-      answer: answer.trim()
-    })
+    if (isNew)
+      handleAddCard({
+        question: question.trim(),
+        answer: answer.trim()
+      })
+    else
+      handleEditCard(cardIndex, {
+        question: question.trim(),
+        answer: answer.trim()
+      })
 
     // redirect back to deck
     goBack()
@@ -82,7 +101,7 @@ class AddCard extends Component {
   }
 
   render = () => {
-    const { question, answer, questionError, answerError } = this.state
+    const { question, answer, questionError, answerError, isNew } = this.state
 
     return (
       <KeyboardAvoidingView
@@ -142,10 +161,27 @@ class AddCard extends Component {
               />
             </View>
           </View>
-          <SubmitBtn onPress={this.submit} btnText={'Submit'} />
+          <SubmitBtn
+            onPress={this.submit}
+            btnText={isNew ? 'Submit' : 'Save'}
+          />
         </ScrollView>
       </KeyboardAvoidingView>
     )
+  }
+}
+
+function mapStateToProps(state, { navigation }) {
+  const { card, deckId } = navigation.state.params
+
+  return {
+    card: card !== undefined ? card : null,
+    cardIndex:
+      card !== undefined
+        ? state[deckId].questions
+            .map((item) => item.question)
+            .indexOf(card.question)
+        : -1
   }
 }
 
@@ -157,6 +193,10 @@ function mapDispatchToProps(dispatch, { navigation }) {
     handleAddCard: (card) => {
       dispatch(addCard(deckId, card))
       addCardToDeck(deckId, card)
+    },
+    handleEditCard: (index, card) => {
+      dispatch(updateCard(deckId, index, card))
+      editCard(deckId, index, card)
     }
   }
 }
@@ -196,6 +236,6 @@ const styles = StyleSheet.create({
 })
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(AddCard)

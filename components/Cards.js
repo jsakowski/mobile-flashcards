@@ -5,7 +5,8 @@ import {
   FlatList,
   StyleSheet,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  TouchableHighlight
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import Swipeout from 'react-native-swipeout'
@@ -13,7 +14,7 @@ import { darkPrimary, textLight } from '../utils/colors'
 import Divider from './Divider'
 
 class Cards extends Component {
-  renderQuestion = ({ index, item }) => {
+  renderQuestion = ({ item }) => {
     const { onDeleteCard } = this.props
 
     const swipeoutBtns = [
@@ -28,26 +29,28 @@ class Cards extends Component {
 
     return (
       <Swipeout right={swipeoutBtns} autoClose={true} backgroundColor={'red'}>
-        <View
-          style={{
-            paddingLeft: 10,
-            paddingRight: 10,
-            backgroundColor: textLight
-          }}
-        >
-          <Text
-            numberOfLines={1}
+        <TouchableHighlight onPress={() => this.props.onEditCard(item)}>
+          <View
             style={{
-              color: darkPrimary,
-              paddingTop: 10,
-
-              paddingBottom: 10
+              paddingLeft: 10,
+              paddingRight: 10,
+              backgroundColor: textLight
             }}
           >
-            {item.question}
-          </Text>
-          <Divider />
-        </View>
+            <Text
+              numberOfLines={1}
+              style={{
+                color: darkPrimary,
+                paddingTop: 10,
+
+                paddingBottom: 10
+              }}
+            >
+              {item.question}
+            </Text>
+            <Divider />
+          </View>
+        </TouchableHighlight>
       </Swipeout>
     )
   }

@@ -106,9 +106,9 @@ class Decks extends Component {
   }
 }
 
-function mapStateToProps(decks) {
+function mapStateToProps(state) {
   return {
-    decks: Object.values(decks)
+    decks: Object.values(state)
   }
 }
 

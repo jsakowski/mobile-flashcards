@@ -19,7 +19,7 @@ import FlashcardsStatusBar from './components/FlashcardsStatusBar'
 import { primary, textLight, darkPrimary } from './utils/colors'
 
 const RouteConfigs = {
-  Decks: {
+  Home: {
     screen: Decks,
     navigationOptions: {
       tabBarLabel: 'Decks',
@@ -46,7 +46,7 @@ const RouteConfigs = {
 }
 
 const TabNavigatorConfig = {
-  initialRouteName: 'Decks',
+  initialRouteName: 'Home',
   lazy: true,
   tabBarOptions: {
     activeTintColor: Platform.OS === 'ios' ? darkPrimary : textLight,
@@ -94,10 +94,7 @@ const MainNavigator = createAppContainer(
         screen: DeckDetail
       },
       AddCard: {
-        screen: AddCard,
-        navigationOptions: {
-          title: ' New Question'
-        }
+        screen: AddCard
       },
       Quiz: {
         screen: Quiz,

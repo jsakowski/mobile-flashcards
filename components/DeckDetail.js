@@ -1,20 +1,44 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Platform } from 'react-native'
+import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
+import { FontAwesome } from '@expo/vector-icons'
 import Deck from './Deck'
 import SubmitBtn from './SubmitBtn'
-import { lightPrimary, accent } from '../utils/colors'
+import { lightPrimary, accent, textLight } from '../utils/colors'
 import Cards from './Cards'
-import { deleteCard } from '../actions'
-import { deleteCardFromDeck } from '../utils/api'
+import { deleteCard, removeDeck } from '../actions'
+import { deleteCardFromDeck, deleteDeck } from '../utils/api'
 
 class DeckDetail extends Component {
   static navigationOptions = ({ navigation }) => {
     const { deckId } = navigation.state.params
 
     return {
-      title: deckId
+      title: deckId,
+      headerRight: (
+        <TouchableOpacity onPress={navigation.getParam('deleteDeck')}>
+          <FontAwesome
+            name={'trash-o'}
+            size={25}
+            style={{ color: textLight, paddingRight: 8 }}
+          />
+        </TouchableOpacity>
+      )
     }
+  }
+
+  componentDidMount() {
+    const { navigation } = this.props
+
+    navigation.setParams({ deleteDeck: this.onDeckDelete })
+  }
+
+  onDeckDelete = () => {
+    const { handleDeleteDeck, navigation } = this.props
+
+    handleDeleteDeck()
+
+    navigation.navigate('Home')
   }
 
   toQuiz = () => {
@@ -36,6 +60,19 @@ class DeckDetail extends Component {
   onCardDelete = (cardId) => {
     const { handleDeleteCard } = this.props
     handleDeleteCard(cardId)
+  }
+
+  onEditCard = (card) => {
+    const { deck } = this.props
+
+    this.props.navigation.navigate('AddCard', {
+      deckId: deck.title,
+      card: card
+    })
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return nextProps.deck !== undefined
   }
 
   render = () => {
@@ -77,6 +114,7 @@ class DeckDetail extends Component {
             questions={deck.questions}
             onAddCard={this.toAddCard}
             onDeleteCard={this.onCardDelete}
+            onEditCard={this.onEditCard}
           />
         )}
       </View>
@@ -99,6 +137,10 @@ function mapDispatchToProps(dispatch, { navigation }) {
     handleDeleteCard: (cardId) => {
       dispatch(deleteCard(deckId, cardId))
       deleteCardFromDeck(deckId, cardId)
+    },
+    handleDeleteDeck: () => {
+      dispatch(removeDeck(deckId))
+      deleteDeck(deckId)
     }
   }
 }

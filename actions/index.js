@@ -3,6 +3,7 @@ export const ADD_DECK = 'ADD_DECK'
 export const DELETE_DECK = 'DELETE_DECK'
 export const ADD_CARD = 'ADD_CARD'
 export const DELETE_CARD = 'DELETE_CARD'
+export const UPDATE_CARD = 'UPDATE_CARD'
 
 export function receiveDecks(decks) {
   return {
@@ -38,5 +39,14 @@ export function deleteCard(deckId, cardId) {
     type: DELETE_CARD,
     deckId,
     cardId
+  }
+}
+
+export function updateCard(deckId, index, card) {
+  return {
+    type: UPDATE_CARD,
+    deckId,
+    index,
+    card
   }
 }

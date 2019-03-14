@@ -3,7 +3,8 @@ import {
   ADD_DECK,
   DELETE_DECK,
   ADD_CARD,
-  DELETE_CARD
+  DELETE_CARD,
+  UPDATE_CARD
 } from '../actions'
 
 function decks(state = {}, action) {
@@ -43,6 +44,23 @@ function decks(state = {}, action) {
           questions: state[action.deckId].questions.filter(
             (item) => item.question !== action.cardId
           )
+        }
+      }
+    case UPDATE_CARD:
+      return {
+        ...state,
+        [action.deckId]: {
+          ...state[action.deckId],
+          questions: state[action.deckId].questions.map((item, index) => {
+            if (index !== action.index) {
+              return item
+            }
+
+            return {
+              ...item,
+              ...action.card
+            }
+          })
         }
       }
     default:
