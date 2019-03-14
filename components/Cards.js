@@ -10,7 +10,12 @@ import {
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import Swipeout from 'react-native-swipeout'
-import { darkPrimary, textLight } from '../utils/colors'
+import {
+  darkPrimary,
+  textLight,
+  lightPrimary,
+  textSecondary
+} from '../utils/colors'
 import Divider from './Divider'
 
 class Cards extends Component {
@@ -29,7 +34,10 @@ class Cards extends Component {
 
     return (
       <Swipeout right={swipeoutBtns} autoClose={true} backgroundColor={'red'}>
-        <TouchableHighlight onPress={() => this.props.onEditCard(item)}>
+        <TouchableHighlight
+          underlayColor={lightPrimary}
+          onPress={() => this.props.onEditCard(item)}
+        >
           <View
             style={{
               paddingLeft: 10,
@@ -40,7 +48,7 @@ class Cards extends Component {
             <Text
               numberOfLines={1}
               style={{
-                color: darkPrimary,
+                color: textSecondary,
                 paddingTop: 10,
 
                 paddingBottom: 10

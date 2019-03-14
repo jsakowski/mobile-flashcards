@@ -1,20 +1,14 @@
 import React, { Component } from 'react'
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  TouchableHighlight
-} from 'react-native'
+import { View, Text, FlatList, StyleSheet } from 'react-native'
 import { AppLoading } from 'expo'
 import { connect } from 'react-redux'
 import Swipeout from 'react-native-swipeout'
 import { getDecks, deleteDeck } from '../utils/api'
 import { darkGrey, white, lightPrimary, darkPrimary } from '../utils/colors'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import Deck from './Deck'
 import { receiveDecks, removeDeck } from '../actions'
 import Divider from './Divider'
+import DeckItem from './DeckItem'
 
 class Decks extends Component {
   state = {
@@ -36,6 +30,13 @@ class Decks extends Component {
       .then(() => this.setState({ ready: true }))
   }
 
+  toDeckDetail = (deckTitle) => {
+    const { navigation } = this.props
+    navigation.navigate('DeckDetail', {
+      deckId: deckTitle
+    })
+  }
+
   renderItem = ({ item }) => {
     const swipeoutBtns = [
       {
@@ -50,24 +51,11 @@ class Decks extends Component {
     return (
       <View>
         <Swipeout right={swipeoutBtns} autoClose={true} backgroundColor={'red'}>
-          <TouchableHighlight
-            style={styles.deckContainer}
-            underlayColor={darkPrimary}
-            onPress={() =>
-              this.props.navigation.navigate('DeckDetail', {
-                deckId: item.title
-              })
-            }
-          >
-            <View style={styles.row}>
-              <MaterialCommunityIcons
-                name={'cards-variant'}
-                size={30}
-                style={{ color: white, paddingLeft: 10 }}
-              />
-              <Deck title={item.title} count={item.questions.length} />
-            </View>
-          </TouchableHighlight>
+          <DeckItem
+            deckTitle={item.title}
+            cardCount={item.questions.length}
+            onPressItem={this.toDeckDetail}
+          />
         </Swipeout>
         <Divider />
       </View>

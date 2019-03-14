@@ -1,10 +1,21 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  Platform,
+  TouchableOpacity,
+  Text
+} from 'react-native'
 import { connect } from 'react-redux'
 import { FontAwesome } from '@expo/vector-icons'
-import Deck from './Deck'
 import SubmitBtn from './SubmitBtn'
-import { lightPrimary, accent, textLight } from '../utils/colors'
+import {
+  lightPrimary,
+  accent,
+  textLight,
+  textPrimary,
+  textSecondary
+} from '../utils/colors'
 import Cards from './Cards'
 import { deleteCard, removeDeck } from '../actions'
 import { deleteCardFromDeck, deleteDeck } from '../utils/api'
@@ -78,16 +89,18 @@ class DeckDetail extends Component {
   render = () => {
     const { deck } = this.props
     const hasCards = deck.questions.length > 0
+    const countText = deck.questions.length === 1 ? 'card' : 'cards'
 
     return (
       <View style={styles.container}>
         <View style={styles.header}>
           <View style={styles.deckContainer}>
-            <Deck
-              title={deck.title}
-              count={deck.questions.length}
-              type={'card'}
-            />
+            <Text numberOfLines={2} style={styles.title}>
+              {deck.title}
+            </Text>
+            <Text style={styles.subTitle}>
+              {deck.questions.length} {countText}
+            </Text>
           </View>
           {hasCards && (
             <View style={{ marginTop: 20 }}>
@@ -166,6 +179,17 @@ const styles = StyleSheet.create({
       width: 0,
       height: 3
     }
+  },
+  title: {
+    color: textPrimary,
+    textAlign: 'center',
+    fontSize: 20,
+    paddingBottom: 5
+  },
+  subTitle: {
+    color: textSecondary,
+    fontSize: 16,
+    textAlign: 'center'
   }
 })
 
