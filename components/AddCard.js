@@ -179,7 +179,7 @@ function mapDispatchToProps(dispatch, { navigation }) {
       const card = {
         id: id,
         answer: answer,
-        questions: question
+        question: question
       }
       dispatch(updateCard(deckId, card))
       editCard(deckId, card)
