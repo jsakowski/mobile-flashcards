@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Text, StyleSheet, Dimensions } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, Animated } from 'react-native'
 import { darkPrimary, accent } from '../utils/colors'
 import SubmitBtn from './SubmitBtn'
 import Score from './Score'
@@ -8,7 +8,6 @@ import Card from './Card'
 
 const initialState = {
   index: 0,
-  displayQuestion: true,
   correct: 0
 }
 
@@ -17,17 +16,20 @@ class Quiz extends Component {
     ...initialState
   }
 
+  animatedValue = new Animated.Value(0)
+
   handleAnswer = (correctAnswer) => {
     const { questions } = this.props
 
     this.setState((currentState) => ({
       correct: correctAnswer ? currentState.correct + 1 : currentState.correct,
-      displayQuestion: true,
       index:
         questions.length > currentState.index
           ? currentState.index + 1
           : currentState.index
     }))
+
+    this.animatedValue = new Animated.Value(0)
   }
 
   correctAnswer = () => {
@@ -45,20 +47,46 @@ class Quiz extends Component {
   }
 
   restart = () => {
+    this.animatedValue = new Animated.Value(0)
+
     this.setState({
       ...initialState
     })
   }
 
+  slide = () => {
+    Animated.timing(this.animatedValue, {
+      toValue: 100,
+      duration: 800
+    }).start()
+  }
+
   render = () => {
     const { questions } = this.props
-    const { index, displayQuestion, correct } = this.state
+    const { index, correct } = this.state
     const completed = questions.length === index
-    const height = Math.round(Dimensions.get('window').height / 2) - 20
+
+    const width = Dimensions.get('window').width
+
+    const itemMovement = this.animatedValue.interpolate({
+      inputRange: [0, 100],
+      outputRange: [width, 0]
+    })
+
+    let transformStyle = {
+      transform: [{ translateX: itemMovement }]
+    }
+
+    this.slide()
 
     if (completed) {
       const amount = Math.round((correct * 100) / questions.length)
-      return <Score amount={amount} restartQuiz={this.restart} />
+
+      return (
+        <Animated.View style={[transformStyle, { flex: 1 }]}>
+          <Score amount={amount} restartQuiz={this.restart} />
+        </Animated.View>
+      )
     }
 
     return (
@@ -67,16 +95,9 @@ class Quiz extends Component {
           {index + 1}/{questions.length}
         </Text>
 
-        <Card
-          cardText={
-            displayQuestion
-              ? questions[index].question
-              : questions[index].answer
-          }
-          isFront={displayQuestion}
-          height={height}
-          flip={this.toggle}
-        />
+        <Animated.View style={transformStyle}>
+          <Card card={questions[index]} index={index} />
+        </Animated.View>
 
         <View style={{ marginTop: 20 }}>
           <SubmitBtn

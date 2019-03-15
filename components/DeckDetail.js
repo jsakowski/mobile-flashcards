@@ -17,6 +17,7 @@ import {
   textSecondary
 } from '../utils/colors'
 import Cards from './Cards'
+import DeckTitle from './DeckTitle'
 import { deleteCard, removeDeck } from '../actions'
 import { deleteCardFromDeck, deleteDeck } from '../utils/api'
 
@@ -94,14 +95,13 @@ class DeckDetail extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <View style={styles.deckContainer}>
-            <Text numberOfLines={2} style={styles.title}>
-              {deck.title}
-            </Text>
-            <Text style={styles.subTitle}>
-              {deck.questions.length} {countText}
-            </Text>
-          </View>
+          <DeckTitle
+            title={deck.title}
+            cardCount={deck.questions.length}
+            numberOfLines={2}
+            display={'detail'}
+          />
+
           {hasCards && (
             <View style={{ marginTop: 20 }}>
               <SubmitBtn
@@ -167,7 +167,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
     justifyContent: 'center'
   },
-  deckContainer: {
+  itemContainer: {
+    alignItems: 'center',
     backgroundColor: lightPrimary,
     borderRadius: Platform.OS === 'ios' ? 16 : 2,
     padding: 10,

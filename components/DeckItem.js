@@ -8,16 +8,10 @@ import {
   Easing
 } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import {
-  textLight,
-  lightPrimary,
-  textPrimary,
-  textSecondary
-} from '../utils/colors'
+import { textLight, lightPrimary } from '../utils/colors'
+import DeckTitle from './DeckTitle'
 
 const DeckItem = ({ deckTitle, cardCount, onPressItem }) => {
-  const countText = cardCount === 1 ? 'card' : 'cards'
-
   let scaleValue = new Animated.Value(0)
   const itemScale = scaleValue.interpolate({
     inputRange: [0, 0.5, 1],
@@ -57,14 +51,11 @@ const DeckItem = ({ deckTitle, cardCount, onPressItem }) => {
               style={styles.itemIcon}
             />
           </Animated.View>
-          <View style={styles.itemContainer}>
-            <Text numberOfLines={1} style={styles.title}>
-              {deckTitle}
-            </Text>
-            <Text style={styles.subTitle}>
-              {cardCount} {countText}
-            </Text>
-          </View>
+          <DeckTitle
+            title={deckTitle}
+            cardCount={cardCount}
+            numberOfLines={1}
+          />
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -80,18 +71,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     marginRight: 40
-  },
-  itemContainer: {
-    padding: 10
-  },
-  title: {
-    color: textPrimary,
-    fontSize: 15,
-    paddingBottom: 5
-  },
-  subTitle: {
-    color: textSecondary,
-    fontSize: 12
   },
   itemIcon: {
     color: textLight,
