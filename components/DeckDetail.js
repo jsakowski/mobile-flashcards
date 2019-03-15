@@ -1,11 +1,5 @@
 import React, { Component } from 'react'
-import {
-  View,
-  StyleSheet,
-  Platform,
-  TouchableOpacity,
-  Text
-} from 'react-native'
+import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { FontAwesome } from '@expo/vector-icons'
 import SubmitBtn from './SubmitBtn'
@@ -23,10 +17,10 @@ import { deleteCardFromDeck, deleteDeck } from '../utils/api'
 
 class DeckDetail extends Component {
   static navigationOptions = ({ navigation }) => {
-    const { deckId } = navigation.state.params
+    const { title } = navigation.state.params
 
     return {
-      title: deckId,
+      title: title,
       headerRight: (
         <TouchableOpacity onPress={navigation.getParam('deleteDeck')}>
           <FontAwesome
@@ -40,9 +34,11 @@ class DeckDetail extends Component {
   }
 
   componentDidMount() {
-    const { navigation } = this.props
+    const { navigation, deck } = this.props
 
-    navigation.setParams({ deleteDeck: this.onDeckDelete })
+    navigation.setParams({
+      deleteDeck: this.onDeckDelete
+    })
   }
 
   onDeckDelete = () => {
@@ -57,7 +53,7 @@ class DeckDetail extends Component {
     const { deck } = this.props
 
     this.props.navigation.navigate('Quiz', {
-      deckId: deck.title
+      deckId: deck.id
     })
   }
 
@@ -65,7 +61,7 @@ class DeckDetail extends Component {
     const { deck } = this.props
 
     this.props.navigation.navigate('AddCard', {
-      deckId: deck.title
+      deckId: deck.id
     })
   }
 
@@ -78,7 +74,7 @@ class DeckDetail extends Component {
     const { deck } = this.props
 
     this.props.navigation.navigate('AddCard', {
-      deckId: deck.title,
+      deckId: deck.id,
       card: card
     })
   }
@@ -89,8 +85,8 @@ class DeckDetail extends Component {
 
   render = () => {
     const { deck } = this.props
+
     const hasCards = deck.questions.length > 0
-    const countText = deck.questions.length === 1 ? 'card' : 'cards'
 
     return (
       <View style={styles.container}>
@@ -138,7 +134,6 @@ class DeckDetail extends Component {
 function mapStateToProps(state, { navigation }) {
   const { deckId } = navigation.state.params
   return {
-    deckId,
     deck: state[deckId]
   }
 }
@@ -168,7 +163,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   itemContainer: {
-    alignItems: 'center',
     backgroundColor: lightPrimary,
     borderRadius: Platform.OS === 'ios' ? 16 : 2,
     padding: 10,

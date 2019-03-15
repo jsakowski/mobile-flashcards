@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { View, Text, FlatList, StyleSheet } from 'react-native'
+import { View, Text, FlatList, StyleSheet, Keyboard } from 'react-native'
 import { AppLoading } from 'expo'
 import { connect } from 'react-redux'
 import Swipeout from 'react-native-swipeout'
 import { getDecks, deleteDeck } from '../utils/api'
-import { darkGrey, white, lightPrimary, darkPrimary } from '../utils/colors'
+import { lightPrimary, darkPrimary } from '../utils/colors'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { receiveDecks, removeDeck } from '../actions'
 import Divider from './Divider'
@@ -18,22 +18,31 @@ class Decks extends Component {
   handleDeleteDeck = (item) => {
     const { dispatch } = this.props
 
-    dispatch(removeDeck(item.title))
-    deleteDeck(item.title)
+    dispatch(removeDeck(item.id))
+    deleteDeck(item.id)
   }
 
   componentDidMount() {
     const { dispatch } = this.props
 
     getDecks()
-      .then((items) => dispatch(receiveDecks(items)))
-      .then(() => this.setState({ ready: true }))
+      .then((items) => {
+        return dispatch(receiveDecks(items))
+      })
+      .then(() => {
+        this.setState({ ready: true })
+      })
+
+    this.focusListener = this.props.navigation.addListener('didFocus', () => {
+      Keyboard.dismiss()
+    })
   }
 
-  toDeckDetail = (deckTitle) => {
+  toDeckDetail = (deck) => {
     const { navigation } = this.props
     navigation.navigate('DeckDetail', {
-      deckId: deckTitle
+      deckId: deck.id,
+      title: deck.title
     })
   }
 
@@ -51,13 +60,22 @@ class Decks extends Component {
     return (
       <View>
         <Swipeout right={swipeoutBtns} autoClose={true} backgroundColor={'red'}>
-          <DeckItem
-            deckTitle={item.title}
-            cardCount={item.questions.length}
-            onPressItem={this.toDeckDetail}
-          />
+          <DeckItem deck={item} onPressItem={this.toDeckDetail} />
         </Swipeout>
         <Divider />
+      </View>
+    )
+  }
+
+  noDecks = () => {
+    return (
+      <View style={styles.centered}>
+        <MaterialCommunityIcons
+          name={'cards-playing-outline'}
+          size={100}
+          style={styles.deckIcon}
+        />
+        <Text style={styles.title}>Please create your first deck</Text>
       </View>
     )
   }
@@ -68,26 +86,16 @@ class Decks extends Component {
 
     if (!ready) return <AppLoading />
 
-    if (decks.length === 0)
-      return (
-        <View style={styles.centered}>
-          <MaterialCommunityIcons
-            name={'cards-playing-outline'}
-            size={100}
-            style={styles.deckIcon}
-          />
-          <Text style={styles.titleText}>Please create your first deck</Text>
-        </View>
-      )
-
     return (
       <View style={styles.container}>
         <FlatList
           data={decks}
           renderItem={this.renderItem}
           keyExtractor={(item) => {
-            return item.title
+            return item.id
           }}
+          ListEmptyComponent={this.noDecks}
+          contentContainerStyle={{ flexGrow: 1 }}
         />
       </View>
     )
@@ -102,8 +110,7 @@ function mapStateToProps(state) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: white
+    flex: 1
   },
   centered: {
     flex: 1,
@@ -111,7 +118,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   deckIcon: {
-    color: darkGrey
+    color: darkPrimary
   },
   deckContainer: {
     backgroundColor: lightPrimary
@@ -121,6 +128,9 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     marginRight: 40
+  },
+  title: {
+    fontSize: 20
   }
 })
 

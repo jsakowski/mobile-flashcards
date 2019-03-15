@@ -13,7 +13,7 @@ import { connect } from 'react-redux'
 import { addDeck } from '../actions'
 import SubmitBtn from './SubmitBtn'
 import { textSecondary, lightPrimary } from '../utils/colors'
-import { saveDeckTitle } from '../utils/api'
+import { saveDeck, formatDeck } from '../utils/api'
 import { isBlank } from '../utils/validation'
 
 const initialState = {
@@ -38,8 +38,9 @@ class AddDeck extends Component {
       this.setState({
         ...initialState
       })
-
-      this.workaroundFocus()
+      setTimeout(() => {
+        this.workaroundFocus()
+      }, 100)
     })
   }
 
@@ -68,12 +69,14 @@ class AddDeck extends Component {
       ...initialState
     })
     const deckTitle = title.trim()
-    handleAddDeck(deckTitle)
+
+    const deckId = handleAddDeck(deckTitle)
 
     //navigation to Decks Tab and then to the new deck
     Promise.all([navigation.dispatch(NavigationActions.back())]).then(() => {
       navigation.navigate('DeckDetail', {
-        deckId: deckTitle
+        deckId: deckId,
+        title: deckTitle
       })
     })
   }
@@ -89,7 +92,7 @@ class AddDeck extends Component {
       <KeyboardAvoidingView
         style={styles.container}
         behavior='padding'
-        keyboardVerticalOffset={100}
+        keyboardVerticalOffset={160}
       >
         <ScrollView keyboardShouldPersistTaps={'handled'}>
           <Text style={styles.titleText}>
@@ -106,10 +109,12 @@ class AddDeck extends Component {
                 placeholderTextColor={textSecondary}
                 onChangeText={(value) => this.onChange(value)}
                 value={title}
+                autoFocus={true}
                 ref={(ref) => (this.titleInput = ref)}
-                onBlur={() => {
-                  this.setState({ titleError: this.validate(this.state.title) })
-                }}
+                blurOnSubmit={false}
+                maxLength={50}
+                onSubmitEditing={this.submit}
+                returnKeyType={'done'}
               />
             </View>
             <SubmitBtn onPress={this.submit} btnText={'Create Deck'} />
@@ -123,15 +128,15 @@ class AddDeck extends Component {
 function mapDispatchToProps(dispatch) {
   return {
     handleAddDeck: (deckTitle) => {
+      const deck = formatDeck(deckTitle)
       dispatch(
         addDeck({
-          [deckTitle]: {
-            title: deckTitle,
-            questions: []
-          }
+          [deck.id]: deck
         })
       )
-      saveDeckTitle(deckTitle)
+      saveDeck(deck)
+
+      return deck.id
     }
   }
 }

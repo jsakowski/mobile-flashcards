@@ -16,31 +16,25 @@ import DeckDetail from './components/DeckDetail'
 import AddCard from './components/AddCard'
 import Quiz from './components/Quiz'
 import FlashcardsStatusBar from './components/FlashcardsStatusBar'
-import { primary, textLight, darkPrimary } from './utils/colors'
+import {
+  primary,
+  textLight,
+  darkPrimary,
+  accent,
+  textSecondary
+} from './utils/colors'
 
 const RouteConfigs = {
   Home: {
     screen: Decks,
     navigationOptions: {
-      tabBarLabel: 'Decks',
-      tabBarIcon: ({ tintColor }) => (
-        <MaterialCommunityIcons
-          name='cards-playing-outline'
-          size={30}
-          color={tintColor}
-        />
-      ),
-      swipeEnabled: false
+      tabBarLabel: 'Decks'
     }
   },
   AddDeck: {
     screen: AddDeck,
     navigationOptions: {
-      tabBarLabel: 'New Deck',
-      tabBarIcon: ({ tintColor }) => (
-        <Ionicons name='ios-add' size={30} color={tintColor} />
-      ),
-      swipeEnabled: false
+      tabBarLabel: 'New Deck'
     }
   }
 }
@@ -48,17 +42,30 @@ const RouteConfigs = {
 const TabNavigatorConfig = {
   initialRouteName: 'Home',
   lazy: true,
+  swipeEnabled: false,
+
   tabBarOptions: {
-    activeTintColor: Platform.OS === 'ios' ? darkPrimary : textLight,
+    activeTintColor: darkPrimary,
+    inactiveTintColor: textSecondary,
+    upperCaseLabel: Platform.OS === 'ios' ? false : true,
+    // activeTintColor: Platform.OS === 'ios' ? darkPrimary : textLight,
+    labelStyle: {
+      fontSize: 16
+    },
+    indicatorStyle: {
+      backgroundColor: darkPrimary
+    },
     style: {
-      height: 58,
-      backgroundColor: Platform.OS === 'ios' ? textLight : primary,
+      height: 55,
+      // backgroundColor: Platform.OS === 'ios' ? textLight : primary,
+      backgroundColor: textLight,
+
       shadowColor: 'rgba(0, 0, 0, 0.24)',
       shadowOffset: {
         width: 0,
-        height: 3
+        height: 1
       },
-      shadowRadius: 6,
+      shadowRadius: 2,
       shadowOpacity: 1
     },
     safeAreaInset: true
@@ -69,19 +76,22 @@ const TabNavigatorConfig = {
 }
 
 const Tabs = createAppContainer(
-  Platform.OS === 'ios'
-    ? createBottomTabNavigator(RouteConfigs, TabNavigatorConfig)
-    : createMaterialTopTabNavigator(RouteConfigs, TabNavigatorConfig)
+  // Platform.OS === 'ios'
+  //   ? createBottomTabNavigator(RouteConfigs, TabNavigatorConfig)
+  //   : createMaterialTopTabNavigator(RouteConfigs, TabNavigatorConfig)
+  createMaterialTopTabNavigator(RouteConfigs, TabNavigatorConfig)
 )
 const mainNavigationOptions =
-  Platform.OS === 'ios'
-    ? {
-        title: 'Flashcards',
-        headerBackTitle: 'Home'
-      }
-    : {
-        header: null
-      }
+  // Platform.OS === 'ios'
+  //   ? {
+  //       title: 'Flashcards',
+  //       headerBackTitle: 'Home'
+  //     }
+  //   : {
+  {
+    title: 'Flashcards',
+    headerBackTitle: 'Home'
+  }
 
 const MainNavigator = createAppContainer(
   createStackNavigator(

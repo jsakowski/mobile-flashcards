@@ -12,7 +12,7 @@ import SubmitBtn from './SubmitBtn'
 import { textSecondary, lightPrimary, divider } from '../utils/colors'
 import { isBlank } from '../utils/validation'
 import { addCard, updateCard } from '../actions'
-import { addCardToDeck, editCard } from '../utils/api'
+import { addCardToDeck, editCard, formatCard } from '../utils/api'
 
 const initialState = {
   question: '',
@@ -45,13 +45,7 @@ class AddCard extends Component {
     })
   }
   componentDidMount() {
-    this.focusListener = this.props.navigation.addListener('didFocus', () => {
-      this.workaroundFocus()
-    })
-  }
-
-  componentWillUnmount() {
-    this.focusListener.remove()
+    this.workaroundFocus()
   }
 
   workaroundFocus() {
@@ -64,7 +58,7 @@ class AddCard extends Component {
 
   submit = () => {
     const { question, answer, isNew } = this.state
-    const { goBack, handleAddCard, handleEditCard, cardIndex } = this.props
+    const { goBack, handleAddCard, handleEditCard, card } = this.props
 
     //validate
     const questionError = this.validate('question', question)
@@ -81,16 +75,8 @@ class AddCard extends Component {
     })
 
     // update Redux
-    if (isNew)
-      handleAddCard({
-        question: question.trim(),
-        answer: answer.trim()
-      })
-    else
-      handleEditCard(cardIndex, {
-        question: question.trim(),
-        answer: answer.trim()
-      })
+    if (isNew) handleAddCard(question.trim(), answer.trim())
+    else handleEditCard(card.id, question.trim(), answer.trim())
 
     // redirect back to deck
     goBack()
@@ -172,16 +158,10 @@ class AddCard extends Component {
 }
 
 function mapStateToProps(state, { navigation }) {
-  const { card, deckId } = navigation.state.params
+  const { card } = navigation.state.params
 
   return {
-    card: card !== undefined ? card : null,
-    cardIndex:
-      card !== undefined
-        ? state[deckId].questions
-            .map((item) => item.question)
-            .indexOf(card.question)
-        : -1
+    card: card !== undefined ? card : null
   }
 }
 
@@ -190,13 +170,19 @@ function mapDispatchToProps(dispatch, { navigation }) {
 
   return {
     goBack: () => navigation.goBack(),
-    handleAddCard: (card) => {
-      dispatch(addCard(deckId, card))
-      addCardToDeck(deckId, card)
+    handleAddCard: (question, answer) => {
+      const newCard = formatCard(question, answer)
+      dispatch(addCard(deckId, newCard))
+      addCardToDeck(deckId, newCard)
     },
-    handleEditCard: (index, card) => {
-      dispatch(updateCard(deckId, index, card))
-      editCard(deckId, index, card)
+    handleEditCard: (id, question, answer) => {
+      const card = {
+        id: id,
+        answer: answer,
+        questions: question
+      }
+      dispatch(updateCard(deckId, card))
+      editCard(deckId, card)
     }
   }
 }
@@ -210,7 +196,8 @@ const styles = StyleSheet.create({
     paddingBottom: 20
   },
   textField: {
-    padding: 10
+    padding: 10,
+    backgroundColor: '#D3EAFC'
   },
   fieldContainer: {
     marginTop: 17,

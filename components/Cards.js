@@ -27,7 +27,7 @@ class Cards extends Component {
         text: 'Delete',
         backgroundColor: '#FF0000',
         onPress: () => {
-          onDeleteCard(item.question)
+          onDeleteCard(item.id)
         }
       }
     ]
@@ -38,22 +38,8 @@ class Cards extends Component {
           underlayColor={lightPrimary}
           onPress={() => this.props.onEditCard(item)}
         >
-          <View
-            style={{
-              paddingLeft: 10,
-              paddingRight: 10,
-              backgroundColor: textLight
-            }}
-          >
-            <Text
-              numberOfLines={1}
-              style={{
-                color: textSecondary,
-                paddingTop: 10,
-
-                paddingBottom: 10
-              }}
-            >
+          <View style={styles.cardItem}>
+            <Text numberOfLines={1} style={styles.cardItemText}>
               {item.question}
             </Text>
             <Divider />
@@ -67,43 +53,17 @@ class Cards extends Component {
     const { questions, onAddCard } = this.props
 
     return (
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: textLight,
-          marginTop: 20
-        }}
-      >
-        <View
-          style={{
-            flexDirection: 'row',
-            backgroundColor: darkPrimary,
-            padding: 12,
-            justifyContent: 'flex-end'
-          }}
-        >
+      <View style={styles.container}>
+        <View style={styles.row}>
           <TouchableOpacity onPress={onAddCard}>
-            <View
-              style={{
-                flexDirection: 'row'
-              }}
-            >
+            <View style={styles.header}>
               <Ionicons
                 name={Platform.OS === 'ios' ? 'ios-add' : 'md-add'}
                 style={{ marginRight: 5 }}
                 size={20}
                 color={textLight}
               />
-              <Text
-                style={{
-                  color: textLight,
-                  alignSelf: 'flex-end',
-                  justifyContent: 'center',
-                  alignItems: 'center'
-                }}
-              >
-                Add Card
-              </Text>
+              <Text style={styles.action}>Add Card</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -111,12 +71,48 @@ class Cards extends Component {
           data={questions}
           renderItem={this.renderQuestion}
           keyExtractor={(item) => {
-            return item.question
+            return item.id
           }}
         />
       </View>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: textLight,
+    marginTop: 20,
+    paddingBottom: 20
+  },
+  row: {
+    flexDirection: 'row',
+    backgroundColor: darkPrimary,
+    padding: 12,
+    justifyContent: 'flex-end'
+  },
+
+  header: {
+    flexDirection: 'row'
+  },
+  action: {
+    color: textLight,
+    alignSelf: 'flex-end',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  cardItem: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    backgroundColor: textLight
+  },
+  cardItemText: {
+    color: textSecondary,
+    paddingTop: 10,
+
+    paddingBottom: 10
+  }
+})
 
 export default Cards

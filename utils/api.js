@@ -1,37 +1,10 @@
-import React from 'react'
 import { AsyncStorage } from 'react-native'
 
 const DECK_STORAGE_KEY = 'MobileFlashcards:decks'
 
-const dummyData = {
-  React: {
-    title: 'React',
-    questions: [
-      {
-        question: 'What is React?',
-        answer: 'A library for managing user interfaces'
-      },
-      {
-        question: 'Where do you make Ajax requests in React?',
-        answer: 'The componentDidMount lifecycle event'
-      }
-    ]
-  },
-  JavaScript: {
-    title: 'JavaScript',
-    questions: [
-      {
-        question: 'What is a closure?',
-        answer:
-          'The combination of a function and the lexical environment within which that function was declared.'
-      }
-    ]
-  }
-}
-
 export function getDecks() {
   return AsyncStorage.getItem(DECK_STORAGE_KEY).then((results) => {
-    return results === null ? setDummyData() : JSON.parse(results)
+    return JSON.parse(results)
   })
 }
 
@@ -44,14 +17,11 @@ export function getDeck(id) {
   })
 }
 
-export function saveDeckTitle(title) {
+export function saveDeck(deck) {
   return AsyncStorage.mergeItem(
     DECK_STORAGE_KEY,
     JSON.stringify({
-      [title]: {
-        title: title,
-        questions: []
-      }
+      [deck.id]: deck
     })
   )
 }
@@ -88,7 +58,7 @@ export function deleteCardFromDeck(deckId, cardId) {
       const decks = JSON.parse(results)
 
       let deck = decks[deckId]
-      deck.questions = deck.questions.filter((item) => item.question !== cardId)
+      deck.questions = deck.questions.filter((item) => item.id !== cardId)
       return deck
     })
     .then((deck) => {
@@ -99,13 +69,19 @@ export function deleteCardFromDeck(deckId, cardId) {
     })
 }
 
-export function editCard(deckId, index, card) {
+export function editCard(deckId, card) {
   return AsyncStorage.getItem(DECK_STORAGE_KEY)
     .then((results) => {
       const decks = JSON.parse(results)
 
       let deck = decks[deckId]
-      deck.questions[index] = card
+      deck.questions = deck.questions.map((item) => {
+        if (item.id !== card.id) return item
+
+        return {
+          ...card
+        }
+      })
       return deck
     })
     .then((deck) => {
@@ -116,16 +92,29 @@ export function editCard(deckId, index, card) {
     })
 }
 
-function setDummyData() {
-  AsyncStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(dummyData))
-  return dummyData
+export function formatDeck(title) {
+  return {
+    id: generateUID(),
+    title: title,
+    questions: []
+  }
 }
 
-function formatDeckResults(data) {
-  return Object.values(data).map((item) => {
-    return {
-      title: item.title,
-      cardCount: item.questions === null ? 0 : item.questions.length
-    }
-  })
+export function formatCard(question, answer) {
+  return {
+    id: generateUID(),
+    answer: answer,
+    question: question
+  }
+}
+
+function generateUID() {
+  return (
+    Math.random()
+      .toString(36)
+      .substring(2, 15) +
+    Math.random()
+      .toString(36)
+      .substring(2, 15)
+  )
 }

@@ -42,7 +42,7 @@ function decks(state = {}, action) {
         [action.deckId]: {
           ...state[action.deckId],
           questions: state[action.deckId].questions.filter(
-            (item) => item.question !== action.cardId
+            (item) => item.id !== action.cardId
           )
         }
       }
@@ -51,8 +51,8 @@ function decks(state = {}, action) {
         ...state,
         [action.deckId]: {
           ...state[action.deckId],
-          questions: state[action.deckId].questions.map((item, index) => {
-            if (index !== action.index) {
+          questions: state[action.deckId].questions.map((item) => {
+            if (item.id !== action.card.id) {
               return item
             }
 

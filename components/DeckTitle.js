@@ -34,7 +34,6 @@ const styles = StyleSheet.create({
     backgroundColor: lightPrimary,
     borderRadius: Platform.OS === 'ios' ? 16 : 2,
     padding: 20,
-
     marginTop: 10,
     shadowRadius: 3,
     shadowOpacity: 0.8,

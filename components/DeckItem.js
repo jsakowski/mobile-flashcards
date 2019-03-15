@@ -1,7 +1,6 @@
 import React from 'react'
 import {
   View,
-  Text,
   StyleSheet,
   TouchableWithoutFeedback,
   Animated,
@@ -11,7 +10,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { textLight, lightPrimary } from '../utils/colors'
 import DeckTitle from './DeckTitle'
 
-const DeckItem = ({ deckTitle, cardCount, onPressItem }) => {
+const DeckItem = ({ deck, onPressItem }) => {
   let scaleValue = new Animated.Value(0)
   const itemScale = scaleValue.interpolate({
     inputRange: [0, 0.5, 1],
@@ -28,17 +27,17 @@ const DeckItem = ({ deckTitle, cardCount, onPressItem }) => {
         scaleValue.setValue(0)
         Animated.timing(scaleValue, {
           toValue: 1,
-          duration: 80,
+          duration: 300,
           easing: Easing.linear,
           useNativeDriver: true
         }).start(() => {
+          onPressItem(deck)
           Animated.timing(scaleValue, {
             toValue: 0,
             duration: 1,
             easing: Easing.linear,
             useNativeDriver: true
           }).start()
-          onPressItem(deckTitle)
         })
       }}
     >
@@ -52,8 +51,8 @@ const DeckItem = ({ deckTitle, cardCount, onPressItem }) => {
             />
           </Animated.View>
           <DeckTitle
-            title={deckTitle}
-            cardCount={cardCount}
+            title={deck.title}
+            cardCount={deck.questions.length}
             numberOfLines={1}
           />
         </View>

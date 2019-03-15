@@ -42,11 +42,10 @@ export function deleteCard(deckId, cardId) {
   }
 }
 
-export function updateCard(deckId, index, card) {
+export function updateCard(deckId, card) {
   return {
     type: UPDATE_CARD,
     deckId,
-    index,
     card
   }
 }
