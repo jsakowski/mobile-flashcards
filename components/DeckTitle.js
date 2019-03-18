@@ -1,11 +1,6 @@
 import React from 'react'
 import { View, Text, StyleSheet, Platform } from 'react-native'
-import {
-  textLight,
-  lightPrimary,
-  textPrimary,
-  textSecondary
-} from '../utils/colors'
+import { lightPrimary, textPrimary, textSecondary } from '../utils/colors'
 
 const DeckTitle = ({ title, cardCount, numberOfLines, display = 'inList' }) => {
   const countText = cardCount === 1 ? 'card' : 'cards'

@@ -4,7 +4,8 @@ import {
   DELETE_DECK,
   ADD_CARD,
   DELETE_CARD,
-  UPDATE_CARD
+  UPDATE_CARD,
+  UPDATE_DECK_TITLE
 } from '../actions'
 
 function decks(state = {}, action) {
@@ -27,6 +28,14 @@ function decks(state = {}, action) {
             result[current] = state[current]
             return result
           }, {})
+      }
+    case UPDATE_DECK_TITLE:
+      return {
+        ...state,
+        [action.deckId]: {
+          ...state[action.deckId],
+          title: action.title
+        }
       }
     case ADD_CARD:
       return {

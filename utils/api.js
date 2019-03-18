@@ -35,6 +35,25 @@ export function deleteDeck(key) {
   })
 }
 
+export function saveDeckTitle(deckId, title) {
+  return AsyncStorage.getItem(DECK_STORAGE_KEY)
+    .then((results) => {
+      const decks = JSON.parse(results)
+      return decks[deckId]
+    })
+    .then((deck) => {
+      AsyncStorage.mergeItem(
+        DECK_STORAGE_KEY,
+        JSON.stringify({
+          [deckId]: {
+            ...deck,
+            title: title
+          }
+        })
+      )
+    })
+}
+
 export function addCardToDeck(deckId, card) {
   return AsyncStorage.getItem(DECK_STORAGE_KEY)
     .then((results) => {

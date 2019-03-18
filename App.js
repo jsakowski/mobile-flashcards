@@ -2,27 +2,20 @@ import React from 'react'
 import { StyleSheet, View, SafeAreaView, Platform } from 'react-native'
 import {
   createAppContainer,
-  createBottomTabNavigator,
   createMaterialTopTabNavigator,
   createStackNavigator
 } from 'react-navigation'
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import decks from './reducers'
 import Decks from './components/Decks'
 import AddDeck from './components/AddDeck'
+import EditDeck from './components/EditDeck'
 import DeckDetail from './components/DeckDetail'
 import AddCard from './components/AddCard'
 import Quiz from './components/Quiz'
 import FlashcardsStatusBar from './components/FlashcardsStatusBar'
-import {
-  primary,
-  textLight,
-  darkPrimary,
-  accent,
-  textSecondary
-} from './utils/colors'
+import { primary, textLight, darkPrimary, textSecondary } from './utils/colors'
 
 const RouteConfigs = {
   Home: {
@@ -48,7 +41,6 @@ const TabNavigatorConfig = {
     activeTintColor: darkPrimary,
     inactiveTintColor: textSecondary,
     upperCaseLabel: Platform.OS === 'ios' ? false : true,
-    // activeTintColor: Platform.OS === 'ios' ? darkPrimary : textLight,
     labelStyle: {
       fontSize: 16
     },
@@ -57,7 +49,6 @@ const TabNavigatorConfig = {
     },
     style: {
       height: 55,
-      // backgroundColor: Platform.OS === 'ios' ? textLight : primary,
       backgroundColor: textLight,
 
       shadowColor: 'rgba(0, 0, 0, 0.24)',
@@ -76,22 +67,12 @@ const TabNavigatorConfig = {
 }
 
 const Tabs = createAppContainer(
-  // Platform.OS === 'ios'
-  //   ? createBottomTabNavigator(RouteConfigs, TabNavigatorConfig)
-  //   : createMaterialTopTabNavigator(RouteConfigs, TabNavigatorConfig)
   createMaterialTopTabNavigator(RouteConfigs, TabNavigatorConfig)
 )
-const mainNavigationOptions =
-  // Platform.OS === 'ios'
-  //   ? {
-  //       title: 'Flashcards',
-  //       headerBackTitle: 'Home'
-  //     }
-  //   : {
-  {
-    title: 'Flashcards',
-    headerBackTitle: 'Home'
-  }
+const mainNavigationOptions = {
+  title: 'Flashcards',
+  headerBackTitle: 'Home'
+}
 
 const MainNavigator = createAppContainer(
   createStackNavigator(
@@ -110,6 +91,12 @@ const MainNavigator = createAppContainer(
         screen: Quiz,
         navigationOptions: {
           title: 'Quiz'
+        }
+      },
+      EditDeck: {
+        screen: EditDeck,
+        navigationOptions: {
+          title: 'Edit Deck Title'
         }
       }
     },

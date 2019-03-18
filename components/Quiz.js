@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Text, StyleSheet, Dimensions, Animated } from 'react-native'
+import { View, Text, Dimensions, Animated, StyleSheet } from 'react-native'
 import { darkPrimary, accent } from '../utils/colors'
 import SubmitBtn from './SubmitBtn'
 import Score from './Score'

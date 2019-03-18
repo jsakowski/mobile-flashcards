@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, FlatList, StyleSheet, Keyboard } from 'react-native'
+import { View, Text, FlatList, Keyboard, StyleSheet } from 'react-native'
 import { AppLoading } from 'expo'
 import { connect } from 'react-redux'
 import Swipeout from 'react-native-swipeout'

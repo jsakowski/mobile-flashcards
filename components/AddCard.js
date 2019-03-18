@@ -5,8 +5,8 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   TextInput,
-  StyleSheet,
-  Platform
+  Platform,
+  StyleSheet
 } from 'react-native'
 import SubmitBtn from './SubmitBtn'
 import { textSecondary, lightPrimary, divider } from '../utils/colors'
@@ -158,7 +158,8 @@ class AddCard extends Component {
 }
 
 function mapStateToProps(state, { navigation }) {
-  const { card } = navigation.state.params
+  const { card } =
+    navigation.state.params !== undefined ? navigation.state.params : {}
 
   return {
     card: card !== undefined ? card : null
@@ -166,7 +167,8 @@ function mapStateToProps(state, { navigation }) {
 }
 
 function mapDispatchToProps(dispatch, { navigation }) {
-  const { deckId } = navigation.state.params
+  const { deckId } =
+    navigation.state.params !== undefined ? navigation.state.params : {}
 
   return {
     goBack: () => navigation.goBack(),

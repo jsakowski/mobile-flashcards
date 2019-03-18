@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Platform, TouchableOpacity } from 'react-native'
+import {
+  View,
+  Platform,
+  TouchableOpacity,
+  Alert,
+  StyleSheet
+} from 'react-native'
 import { connect } from 'react-redux'
 import { FontAwesome } from '@expo/vector-icons'
 import SubmitBtn from './SubmitBtn'
@@ -22,31 +28,39 @@ class DeckDetail extends Component {
     return {
       title: title,
       headerRight: (
-        <TouchableOpacity onPress={navigation.getParam('deleteDeck')}>
-          <FontAwesome
-            name={'trash-o'}
-            size={25}
-            style={{ color: textLight, paddingRight: 8 }}
-          />
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row' }}>
+          <TouchableOpacity onPress={navigation.getParam('editDeck')}>
+            <FontAwesome name={'edit'} size={25} style={styles.actionIcon} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={navigation.getParam('deleteDeck')}>
+            <FontAwesome name={'trash-o'} size={25} style={styles.actionIcon} />
+          </TouchableOpacity>
+        </View>
       )
     }
   }
 
   componentDidMount() {
-    const { navigation, deck } = this.props
+    const { navigation } = this.props
 
     navigation.setParams({
-      deleteDeck: this.onDeckDelete
+      deleteDeck: this.onDeckDelete,
+      editDeck: this.onEditDeck
+    })
+  }
+
+  onEditDeck = () => {
+    const { deck } = this.props
+
+    this.props.navigation.navigate('EditDeck', {
+      deckId: deck.id
     })
   }
 
   onDeckDelete = () => {
-    const { handleDeleteDeck, navigation } = this.props
+    const { handleDeleteDeck } = this.props
 
     handleDeleteDeck()
-
-    navigation.navigate('Home')
   }
 
   toQuiz = () => {
@@ -147,8 +161,26 @@ function mapDispatchToProps(dispatch, { navigation }) {
       deleteCardFromDeck(deckId, cardId)
     },
     handleDeleteDeck: () => {
-      dispatch(removeDeck(deckId))
-      deleteDeck(deckId)
+      Alert.alert(
+        '',
+        'Are you sure you want to delete?',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => {},
+            style: 'cancel'
+          },
+          {
+            text: 'OK',
+            onPress: () => {
+              dispatch(removeDeck(deckId))
+              deleteDeck(deckId)
+              navigation.navigate('Home')
+            }
+          }
+        ],
+        { cancelable: false }
+      )
     }
   }
 }
@@ -185,6 +217,10 @@ const styles = StyleSheet.create({
     color: textSecondary,
     fontSize: 16,
     textAlign: 'center'
+  },
+  actionIcon: {
+    color: textLight,
+    paddingRight: 8
   }
 })
 

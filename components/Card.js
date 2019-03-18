@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
-  StyleSheet,
   Platform,
   TouchableOpacity,
   ScrollView,
   Animated,
-  Dimensions
+  Dimensions,
+  StyleSheet
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import {
@@ -15,7 +15,6 @@ import {
   lightPrimary,
   darkPrimary,
   textPrimary,
-  textSecondary,
   primary
 } from '../utils/colors'
 import Divider from './Divider'
