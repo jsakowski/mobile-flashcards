@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import { StyleSheet, View, SafeAreaView, Platform } from 'react-native'
 import {
   createAppContainer,
@@ -16,6 +16,7 @@ import AddCard from './components/AddCard'
 import Quiz from './components/Quiz'
 import FlashcardsStatusBar from './components/FlashcardsStatusBar'
 import { primary, textLight, darkPrimary, textSecondary } from './utils/colors'
+import { setLocalNotification } from './utils/notification'
 
 const RouteConfigs = {
   Home: {
@@ -111,7 +112,11 @@ const MainNavigator = createAppContainer(
   )
 )
 
-export default class App extends React.Component {
+export default class App extends Component {
+  componentDidMount() {
+    setLocalNotification()
+  }
+
   render() {
     return (
       <Provider store={createStore(decks)}>

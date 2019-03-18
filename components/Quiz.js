@@ -5,6 +5,10 @@ import { darkPrimary, accent } from '../utils/colors'
 import SubmitBtn from './SubmitBtn'
 import Score from './Score'
 import Card from './Card'
+import {
+  clearLocalNotification,
+  setLocalNotification
+} from '../utils/notification'
 
 const initialState = {
   index: 0,
@@ -21,15 +25,26 @@ class Quiz extends Component {
   handleAnswer = (correctAnswer) => {
     const { questions } = this.props
 
-    this.setState((currentState) => ({
-      correct: correctAnswer ? currentState.correct + 1 : currentState.correct,
-      index:
-        questions.length > currentState.index
-          ? currentState.index + 1
-          : currentState.index
-    }))
+    this.setState(
+      (currentState) => ({
+        correct: correctAnswer
+          ? currentState.correct + 1
+          : currentState.correct,
+        index:
+          questions.length > currentState.index
+            ? currentState.index + 1
+            : currentState.index
+      }),
+      this.handleNotification
+    )
 
     this.animatedValue = new Animated.Value(0)
+  }
+
+  handleNotification = () => {
+    const { questions } = this.props
+    if (this.state.index === questions.length)
+      clearLocalNotification().then(setLocalNotification)
   }
 
   correctAnswer = () => {
