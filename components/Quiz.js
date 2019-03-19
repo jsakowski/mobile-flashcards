@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Dimensions, Animated, StyleSheet } from 'react-native'
+import {
+  View,
+  Text,
+  Dimensions,
+  Animated,
+  StyleSheet,
+  YellowBox
+} from 'react-native'
 import { darkPrimary, accent } from '../utils/colors'
 import SubmitBtn from './SubmitBtn'
 import Score from './Score'
@@ -43,6 +50,10 @@ class Quiz extends Component {
 
   handleNotification = () => {
     const { questions } = this.props
+    YellowBox.ignoreWarnings([
+      'Ability to schedule an automatically repeated notification'
+    ])
+
     if (this.state.index === questions.length)
       clearLocalNotification().then(setLocalNotification)
   }
