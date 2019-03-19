@@ -1,9 +1,9 @@
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
-import { darkPrimary, accent } from '../utils/colors'
+import { darkPrimary, accent, primary } from '../utils/colors'
 import SubmitBtn from './SubmitBtn'
 
-const Score = ({ amount, restartQuiz }) => {
+const Score = ({ amount, restartQuiz, toDeck }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Score</Text>
@@ -13,6 +13,14 @@ const Score = ({ amount, restartQuiz }) => {
           onPress={restartQuiz}
           btnText={'Restart Quiz'}
           color={accent}
+          align={'centered'}
+        />
+      </View>
+      <View style={{ marginTop: 20 }}>
+        <SubmitBtn
+          onPress={toDeck}
+          btnText={'Back to Deck'}
+          color={primary}
           align={'centered'}
         />
       </View>

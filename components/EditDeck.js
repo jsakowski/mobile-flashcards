@@ -7,7 +7,7 @@ import {
   TextInput,
   StyleSheet
 } from 'react-native'
-import { NavigationActions, withNavigation } from 'react-navigation'
+import { withNavigation } from 'react-navigation'
 import { ScrollView } from 'react-native-gesture-handler'
 import { connect } from 'react-redux'
 import { addDeck, updateDeckTitle } from '../actions'
@@ -79,7 +79,7 @@ class EditDeck extends Component {
       const deckId = handleAddDeck(deckTitle)
 
       //navigation to Decks Tab and then to the new deck
-      Promise.all([navigation.dispatch(NavigationActions.back())]).then(() => {
+      Promise.all([navigation.goBack()]).then(() => {
         navigation.navigate('DeckDetail', {
           deckId: deckId,
           title: deckTitle

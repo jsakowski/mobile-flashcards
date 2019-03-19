@@ -8,6 +8,7 @@ import {
   StyleSheet,
   YellowBox
 } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import { darkPrimary, accent } from '../utils/colors'
 import SubmitBtn from './SubmitBtn'
 import Score from './Score'
@@ -80,6 +81,11 @@ class Quiz extends Component {
     })
   }
 
+  toDeck = () => {
+    const { goBack } = this.props.navigation
+    goBack()
+  }
+
   slide = () => {
     Animated.timing(this.animatedValue, {
       toValue: 100,
@@ -110,7 +116,11 @@ class Quiz extends Component {
 
       return (
         <Animated.View style={[transformStyle, { flex: 1 }]}>
-          <Score amount={amount} restartQuiz={this.restart} />
+          <Score
+            amount={amount}
+            restartQuiz={this.restart}
+            toDeck={this.toDeck}
+          />
         </Animated.View>
       )
     }

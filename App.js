@@ -83,7 +83,10 @@ const MainNavigator = createAppContainer(
         navigationOptions: mainNavigationOptions
       },
       DeckDetail: {
-        screen: DeckDetail
+        screen: DeckDetail,
+        navigationOptions: {
+          headerBackTitle: 'Back'
+        }
       },
       AddCard: {
         screen: AddCard
